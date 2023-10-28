@@ -72,6 +72,7 @@
                 :columns="columns"
                 :filter="filter"
                 row-key="car_id"
+                no-data-label="กรุณาเลือกวันที่เริ่มเช่าและวันที่สิ้นสุดการเช่า"
               >
                 <template #body-cell-Carimage="props">
                   <img
@@ -341,49 +342,49 @@ export default {
       {
         name: "Carname",
         align: "left",
-        label: "Carname",
+        label: "ชื่อรถ",
         field: "car_name",
         sortable: true,
       },
       {
         name: "Description",
         align: "left",
-        label: "Description",
+        label: "รายละเอียด",
         field: "description",
         sortable: true,
       },
       {
         name: "Price/Day",
         align: "left",
-        label: "Price/Day",
+        label: "ราคาเช่า(บาท)/วัน",
         field: "price_per_day",
         sortable: true,
       },
       {
         name: "Color",
         align: "left",
-        label: "Color",
+        label: "สี",
         field: "color",
         sortable: true,
       },
       {
         name: "Platenumber",
         align: "left",
-        label: "Platenumber",
+        label: "เลขทะเบียน",
         field: "plat_number",
         sortable: true,
       },
       {
         name: "Typemodel",
         align: "left",
-        label: "Typemodel",
+        label: "ประเภท",
         field: (row) => row.car_type.type_model,
         sortable: true,
       },
       {
         name: "Carimage",
         align: "center",
-        label: "รูปรถเช่า",
+        label: "รูปรถ",
         field: (row) => row.image_path,
       },
       { name: "action", align: "center", field: "car_id" },
