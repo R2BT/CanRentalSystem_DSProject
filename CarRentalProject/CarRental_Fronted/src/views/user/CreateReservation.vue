@@ -227,7 +227,7 @@ export default {
       const startDate = new Date(this.rentStartdate);
       const currentDate = new Date();
       if (startDate < currentDate) {
-        return "วันที่เริ่มเช่ารถต้องไม่น้อยกว่าวันที่ปัจจุบัน";
+        return "วันที่เริ่มเช่ารถต้องไม่น้อยหรือเท่ากับวันที่ปัจจุบัน";
       }
       return true;
     },
