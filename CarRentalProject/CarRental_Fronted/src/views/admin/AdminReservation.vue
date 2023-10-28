@@ -29,13 +29,28 @@
             />
           </div>
           <q-table
+            class="my-sticky-header-table"
             flat
             bordered
             :rows="rows"
             :columns="columns"
             row-key="reservation_id"
             :filter="filter"
+            no-data-label="ไม่มีข้อมูลรายการเช่ารถ"
           >
+          <template #body-cell-Carimage="props">
+              <img
+                v-if="props.row.image_path"
+                :src="props.row.image_path"
+                alt="Car Image"
+                style="
+                  width: 160px;
+                  height: 120px;
+                  display: block;
+                  margin: 0 auto;
+                "
+              />
+            </template>
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
                 <q-btn
@@ -50,7 +65,9 @@
                         props.row.car.car_type.type_model,
                         props.row.start_date,
                         props.row.end_date,
-                        props.row.total_cost)"
+                        props.row.total_cost,
+                        props.row.image_path
+                        )"
                 ></q-btn>
               </q-td>
             </template>
@@ -69,7 +86,19 @@
           class="text-h6 start-container text-center"
           style="margin-bottom: 0"
         >
-          <div style="font-size: 18px font-weight: bold; margin-bottom: 10px;">{{ dialogMessage }}<br /></div>
+          <div style="font-size: 18px font-weight: bold; margin-bottom: 10px;">{{ dialogMessage }}<br />           
+             <img
+                            :src="carShowimgDelete"
+
+                              alt="Car Image"
+                              style="
+                                width: 160px;
+                                height: 120px;
+                                display: block;
+                                margin: 0 auto;
+                                margin-top: 10px;
+                              "
+                            /><br /></div>
         </q-card-title>
         <q-card-title class="text-h6 start-container" style="margin-bottom: 0">
           <div style="font-size: 13px">
@@ -98,6 +127,7 @@
 <script>
 import Navbar from "../../components/EmployeeHeader.vue";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 import ReservationService from "../../service/Reservationservice.js";
 import { ref } from "vue";
 import router from "../../router";
@@ -181,11 +211,30 @@ const columns = ref([
     field: (row) => row.total_cost,
     sortable: true,
   },
+  {
+        name: "Carimage",
+        align: "center",
+        label: "รูปรถเช่า",
+        field: (row) => row.car.image_path,
+      },
   { name: "action", align: "center", field: "reservation_id" },
 ]);
+const decrypt = (encryptedUrl) => {
+      console.log(encryptedUrl);
+      const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
+        CryptoJS.enc.Utf8
+      );
+      return decryptData;
+    };
 const fetchData = () => {
   ReservationService.getReservation().then((response) => {
-    rows.value = response.data;
+    const decryptedRows = response.data.map((row) => {
+                return {
+                  ...row,
+                  image_path: decrypt(row.car.image_path),
+                };
+              });
+              rows.value = decryptedRows;
   });
 };
 const formatDate = (dateString) => {
@@ -223,7 +272,7 @@ export default {
     Navbar,
   },
   methods: {
-    reservationAlert(id,firstname,lastname,phonenumber, carname, platNumber, type,startdate,enddate,price){
+    reservationAlert(id,firstname,lastname,phonenumber, carname, platNumber, type,startdate,enddate,price,img){
       this.dialogMessage = "ยืนยันลบรายการเช่ารถ ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
       this.phoneNumber =  `เบอร์โทรศัพท์ : ${phonenumber}`;
@@ -238,6 +287,7 @@ export default {
       this.countDay = dayDifference;
       this.rentPriceInfo = price ;
       this.dialog = true;
+      this.carShowimgDelete = img;
       this.actionColor = "negative";
       this.ridToDelete = id;
 
@@ -349,5 +399,30 @@ h6 {
   background-color: rgb(255, 255, 255);
   margin-top: 0.5rem;
   margin-left: 0.5rem;
+}
+.my-sticky-header-table::v-deep .q-table__top,
+.my-sticky-header-table::v-deep .q-table__bottom,
+.my-sticky-header-table::v-deep thead tr:first-child th {
+  background-color: #222222;
+  color: white;
+}
+
+.my-sticky-header-table::v-deep thead tr th {
+  position: sticky;
+  z-index: 1;
+}
+
+.my-sticky-header-table::v-deep thead tr:first-child th {
+  top: 0;
+}
+
+.my-sticky-header-table::v-deep.q-table--loading thead tr:last-child th {
+  top: 48px;
+}
+
+.my-sticky-header-table {
+  scroll-margin-top: 48px;
+  height: 470px;
+  width: 100%;
 }
 </style>

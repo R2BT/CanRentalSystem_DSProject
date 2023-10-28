@@ -125,7 +125,7 @@ export default {
         this.phonenumber != ""
       ) {
         var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Content-Type", "application/json; charset=UTF-8");
 
         var raw = {
           user_username: this.username,

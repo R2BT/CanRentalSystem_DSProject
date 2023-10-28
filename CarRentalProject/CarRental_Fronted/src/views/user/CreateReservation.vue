@@ -73,6 +73,19 @@
                 :filter="filter"
                 row-key="car_id"
               >
+                <template #body-cell-Carimage="props">
+                  <img
+                    v-if="props.row.image_path"
+                    :src="props.row.image_path"
+                    alt="Car Image"
+                    style="
+                      width: 160px;
+                      height: 120px;
+                      display: block;
+                      margin: 0 auto;
+                    "
+                  />
+                </template>
                 <template #body-cell-action="props">
                   <q-btn
                     label="เช่า"
@@ -82,6 +95,8 @@
                       height: 20px;
                       margin-right: 20px;
                       margin-top: 5px;
+                      margin-left: 30%;
+                      margin-bottom: 20px;
                     "
                     @click="
                       rentCarAlert(
@@ -89,7 +104,8 @@
                         props.row.car_name,
                         props.row.plat_number,
                         props.row.car_type.type_model,
-                        props.row.price_per_day
+                        props.row.price_per_day,
+                        props.row.image_path
                       )
                     "
                   />
@@ -100,22 +116,41 @@
                           class="text-h6 start-container text-center"
                           style="margin-bottom: 0"
                         >
-                        <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
-                          {{ dialogMessage }}<br>
-                        </div>
+                          <div
+                            style="
+                              font-size: 18px;
+                              font-weight: bold;
+                              margin-bottom: 10px;
+                            "
+                          >
+                            {{ dialogMessage }}<br />
+                            <img
+                            :src="carShowimg"
+
+                              alt="Car Image"
+                              style="
+                                width: 160px;
+                                height: 120px;
+                                display: block;
+                                margin: 0 auto;
+                                margin-top: 10px;
+                              "
+                            /><br />
+                          </div>
                         </q-card-title>
                         <q-card-title
-                          class="text-h6 start-container "
+                          class="text-h6 start-container"
                           style="margin-bottom: 0"
                         >
-                        <div style="font-size: 13px;">
-                          {{ nameCarInfo }}<br>
-                          {{ typeCarInfo }}<br>
-                          {{ platNumberInfo }}<br>
-                          วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า: {{ rentStartdate }} - {{ rentEnddate }}<br>
-                          จำนวนวันที่เช่า: {{ countDay }} วัน <br>
-                          ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br>
-                        </div>
+                          <div style="font-size: 13px">
+                            {{ nameCarInfo }}<br />
+                            {{ typeCarInfo }}<br />
+                            {{ platNumberInfo }}<br />
+                            วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า:
+                            {{ rentStartdate }} - {{ rentEnddate }}<br />
+                            จำนวนวันที่เช่า: {{ countDay }} วัน <br />
+                            ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
+                          </div>
                         </q-card-title>
                         <q-card-title
                           class="text-h6 close-container"
@@ -143,17 +178,17 @@
                   </q-dialog>
                 </template>
                 <template v-slot:top-right>
-                <q-input
-                  bg-color="white"
-                  borderless
-                  dense
-                  debounce="300"
-                  v-model="filter"
-                  placeholder="  Search..."
-                >
-                  <template v-slot:append> </template>
-                </q-input>
-              </template>
+                  <q-input
+                    bg-color="white"
+                    borderless
+                    dense
+                    debounce="300"
+                    v-model="filter"
+                    placeholder="  Search..."
+                  >
+                    <template v-slot:append> </template>
+                  </q-input>
+                </template>
               </q-table>
             </div>
           </div>
@@ -169,9 +204,10 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 import router from "../../router";
 import Navbar from "../../components/EmployeeHeader.vue";
-
+// const carShowimg = ref("");
 export default {
   components: {
     Navbar,
@@ -194,14 +230,14 @@ export default {
       }
       return true;
     },
-    rentCarAlert(id, name, platNumber, type,price) {
-    const pricePerDay = parseFloat(price);
-    const startDate = new Date(this.rentStartdate);
-    const endDate = new Date(this.rentEnddate);
+    rentCarAlert(id, name, platNumber, type, price, img) {
+      const pricePerDay = parseFloat(price);
+      const startDate = new Date(this.rentStartdate);
+      const endDate = new Date(this.rentEnddate);
 
-    const dayDifference = ((endDate - startDate) / (1000 * 60 * 60 * 24))+1;
-    this.rentPriceInfo = pricePerDay * dayDifference;
-    this.countDay = dayDifference;
+      const dayDifference = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
+      this.rentPriceInfo = pricePerDay * dayDifference;
+      this.countDay = dayDifference;
       this.dialogMessage = "ยืนยันรายการเช่ารถ ";
       this.nameCarInfo = `ชื่อรถ: ${name}`;
       this.typeCarInfo = `ประเภท: ${type}`;
@@ -209,6 +245,7 @@ export default {
       console.log(id);
       this.dialog = true;
       this.actionColor = "negative";
+      this.carShowimg = img;
       this.eidToDelete = id;
     },
     confirmRentCar() {
@@ -220,7 +257,6 @@ export default {
     const myItem = localStorage.getItem("user-info");
     console.log(myItem);
     const userInfo = JSON.parse(myItem);
-
     const currentTime = ref("");
     const currentDate = ref("");
     const rentStartdate = ref(null);
@@ -249,7 +285,13 @@ export default {
       updateClock();
       setInterval(updateClock, 1000);
     });
-
+    const decrypt = (encryptedUrl) => {
+      console.log(encryptedUrl);
+      const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
+        CryptoJS.enc.Utf8
+      );
+      return decryptData;
+    };
     const onSubmit = async () => {
       if (rentStartdate.value != null && rentEnddate.value != null) {
         // Create Date objects from the provided date strings
@@ -266,7 +308,13 @@ export default {
               `http://localhost:8081/Car_rental_backend/cars/available?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
             )
             .then((response) => {
-              rows.value = response.data;
+              const decryptedRows = response.data.map((row) => {
+                return {
+                  ...row,
+                  image_path: decrypt(row.image_path),
+                };
+              });
+              rows.value = decryptedRows;
             });
         } catch (error) {
           console.error("Find car rent failed:", error);
@@ -332,6 +380,12 @@ export default {
         field: (row) => row.car_type.type_model,
         sortable: true,
       },
+      {
+        name: "Carimage",
+        align: "center",
+        label: "รูปรถเช่า",
+        field: (row) => row.image_path,
+      },
       { name: "action", align: "center", field: "car_id" },
     ]);
     const rows = ref([]);
@@ -342,7 +396,7 @@ export default {
 
       const startDate = new Date(rentStartdate.value);
       const endDate = new Date(rentEnddate.value);
-      
+
       const formattedStartDate = startDate.toISOString();
       const formattedEndDate = endDate.toISOString();
 
@@ -393,7 +447,7 @@ export default {
       columns,
       rows,
       rentCar,
-      userInfo
+      userInfo,
     };
   },
 };

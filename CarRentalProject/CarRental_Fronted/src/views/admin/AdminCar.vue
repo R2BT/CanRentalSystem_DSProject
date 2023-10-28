@@ -38,13 +38,29 @@
             />
           </div>
           <q-table
+            class="my-sticky-header-table"
             flat
             bordered
             :rows="rows"
             :columns="columns"
             row-key="car_id"
             :filter="filter"
+            :rows-per-page-options="[10]"
+            no-data-label="ไม่มีข้อมูลรถเช่า"
           >
+            <template v-slot:body-cell-Carimage="props">
+              <img
+                v-if="props.row.image_path"
+                :src="props.row.image_path"
+                alt="Car Image"
+                style="
+                  width: 160px;
+                  height: 120px;
+                  display: block;
+                  margin: 0 auto;
+                "
+              />
+            </template>
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
                 <q-btn
@@ -59,7 +75,8 @@
                       props.row.price_per_day,
                       props.row.color,
                       props.row.plat_number,
-                      props.row.car_type
+                      props.row.car_type,
+                      props.row.image_path
                     )
                   "
                 />
@@ -73,8 +90,8 @@
                       props.row.price_per_day,
                       props.row.color,
                       props.row.plat_number,
-                      props.row.car_type.type_model
-                      
+                      props.row.car_type.type_model,
+                      props.row.image_path
                     )
                   "
                 />
@@ -84,7 +101,7 @@
         </div>
       </q-page-container>
     </body>
-     <div v-else>
+    <div v-else>
       <p>Page Not Found</p>
     </div>
   </q-layout>
@@ -97,6 +114,17 @@
         >
           <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px">
             {{ dialogMessage }}<br />
+            <img
+              :src="carShowimgDelete"
+              alt="Car Image"
+              style="
+                width: 160px;
+                height: 120px;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+              "
+            /><br />
           </div>
         </q-card-title>
         <q-card-title class="text-h6 start-container" style="margin-bottom: 0">
@@ -105,7 +133,7 @@
             {{ typeCarInfo }}<br />
             {{ platNumberInfo }}<br />
             {{ colorShow }}<br />
-            ราคาเช่าต่อวัน :  {{ rentPriceInfo }} บาท<br /> 
+            ราคาเช่าต่อวัน : {{ rentPriceInfo }} บาท<br />
           </div>
         </q-card-title>
         <q-card-title class="text-h6 close-container" style="margin-bottom: 0">
@@ -139,6 +167,10 @@
                 label="ราคาเช่าต่อวัน"
                 type="number"
                 step="0.01"
+                :rules="[
+                  (value) => !!value || 'กรุณากรอกราคา',
+                  (value) => value > 0 || 'ราคาต้องไม่ติดลบและไม่เท่ากับ0',
+                ]"
                 required
               />
               <q-input v-model="color" label="สี" required />
@@ -163,6 +195,27 @@
                   <q-item-label>{{ props.item.type_id }}</q-item-label>
                 </template>
               </q-select>
+              <q-input
+                v-model="car_img"
+                type="file"
+                @change="handleFileChange"
+                accept=".jpeg,.jpg,.png"
+                hint="Upload รูปภาพรถ"
+                required
+                :rules="[(value) => !!value || 'กรุณา Upload รูปภาพรถ']"
+              >
+                <template v-slot:append>
+                  <q-icon name="attachment" color="grey" />
+                </template>
+              </q-input>
+              <div class="image-container" v-if="car_img">
+                <img
+                  v-if="car_img"
+                  :src="car_show"
+                  alt="Selected Image"
+                  class="centered-image"
+                />
+              </div>
               <q-card-actions align="center" style="padding-top: 10px">
                 <q-btn
                   label="ยกเลิก"
@@ -206,6 +259,10 @@
                 label="ราคาเช่าต่อวัน"
                 type="number"
                 step="0.01"
+                :rules="[
+                  (value) => !!value || 'กรุณากรอกราคา',
+                  (value) => value > 0 || 'ราคาต้องไม่ติดลบและไม่เท่ากับ0',
+                ]"
                 required
               />
               <q-input v-model="color" label="สี" required />
@@ -230,6 +287,30 @@
                   <q-item-label>{{ props.item.type_id }}</q-item-label>
                 </template>
               </q-select>
+              <q-input
+                v-model="car_imgEdit"
+                type="file"
+                @change="handleFileChangeEdit"
+                accept=".jpeg,.jpg,.png"
+                hint="Upload รูปภาพรถ"
+                required
+                :rules="[(value) => !!value || 'กรุณา Upload รูปภาพรถ']"
+              >
+                <template v-slot:append>
+                  <q-icon name="attachment" color="grey" />
+                </template>
+              </q-input>
+              <img
+                :src="carShowimgEdit"
+                alt="Car Image"
+                style="
+                  width: 160px;
+                  height: 120px;
+                  display: block;
+                  margin: 0 auto;
+                  margin-top: 10px;
+                "
+              /><br />
               <q-card-actions align="center" style="padding-top: 10px">
                 <q-btn
                   label="ยกเลิก"
@@ -259,6 +340,7 @@ import Navbar from "../../components/EmployeeHeader.vue";
 import CarService from "../../service/Carservice.js";
 import CartypeService from "../../service/Cartypeservice.js";
 import { ref } from "vue";
+import CryptoJS from "crypto-js";
 import router from "../../router";
 const carname = ref("");
 const description = ref("");
@@ -266,6 +348,12 @@ const pricePerday = ref("");
 const color = ref("");
 const platNumber = ref("");
 const carType = ref([]);
+const car_img = ref(null);
+const car_imgEdit = ref(null);
+const carShowimgEdit = ref(null);
+const car_show = ref(null);
+const car_img_send_add = ref(null);
+const car_img_send_edit = ref(null);
 const selectedCarType = ref(null);
 const carTypeId = ref("");
 const rows = ref([]);
@@ -321,13 +409,32 @@ const columns = ref([
     field: (row) => row.car_type.type_model,
     sortable: true,
   },
+  {
+    name: "Carimage",
+    align: "center",
+    label: "รูปรถเช่า",
+    field: (row) => row.image_path,
+    sortable: true,
+    filter: false,
+  },
   { name: "action", align: "center", field: "car_id" },
 ]);
-
+const decrypt = (encryptedUrl) => {
+  console.log(encryptedUrl);
+  const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
+    CryptoJS.enc.Utf8
+  );
+  return decryptData;
+};
 const fetchData = () => {
   CarService.getCar().then((response) => {
-    rows.value = response.data;
-    //  console.log(rows.value[0].car_type.type_model)
+    const decryptedRows = response.data.map((row) => {
+      return {
+        ...row,
+        image_path: decrypt(row.image_path),
+      };
+    });
+    rows.value = decryptedRows;
   });
 };
 const fetchCarTypes = async () => {
@@ -344,7 +451,7 @@ export default {
     fetchData();
     fetchCarTypes();
     carTypeId.value = selectedCarType.value;
-    console.log(carTypeId.value)
+    console.log(carTypeId.value);
     const myItem = localStorage.getItem("user-info");
     const userInfo = JSON.parse(myItem);
     return {
@@ -360,11 +467,19 @@ export default {
       platNumber,
       pricePerday,
       description,
+      car_img,
+      car_show,
+      carShowimgEdit,
+      car_imgEdit,
+      car_img_send_add,
+      car_img_send_edit,
+      secret: "123#$%",
     };
   },
 
   data() {
     return {
+      files: [],
       pagination: {
         sortBy: "name",
       },
@@ -380,7 +495,135 @@ export default {
     Navbar,
   },
   methods: {
+    async handleFileChange(event) {
+      const base64 = ref();
+      const base64Reducesize = ref();
+      console.log(this.car_img);
+      console.log("worked");
+      console.log(this.car_img[0].name);
+      if (this.car_img != null) {
+        this.car_show = URL.createObjectURL(this.car_img[0]);
+        // const hashedURL = this.encrypt(this.car_show);
+        base64.value = await this.convertBase64(this.car_img[0]);
+        base64Reducesize.value = await this.reduceSizeBase64(base64.value);
+        this.car_img_send_add = this.encrypt(base64Reducesize.value);
+      }
+      console.log("Selected image URL:", this.car_img_send_add);
+    },
+    async handleFileChangeEdit(event) {
+      const base64 = ref();
+      const base64Reducesize = ref();
+      console.log(this.car_imgEdit);
+      console.log(this.car_imgEdit[0].name);
+      if (this.car_imgEdit != null) {
+        this.carShowimgEdit = URL.createObjectURL(this.car_imgEdit[0]);
+        // const hashedURL = this.encrypt(this.car_show);
+        base64.value = await this.convertBase64(this.car_imgEdit[0]);
+        base64Reducesize.value = await this.reduceSizeBase64(base64.value);
+        this.car_img_send_edit = this.encrypt(base64Reducesize.value);
+      }
+      console.log("Selected image URL:", this.car_img_send_edit);
+    },
 
+    convertBase64(file) {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+      });
+    },
+
+    async reduceSizeBase64(base64) {
+      const minImageSize = 300; // Set your minimum image size here (in KB)
+      const maxImageWidth = 450; // Set your maximum image width here
+      const maxImageHeight = 450; // Set your maximum image height here
+
+      const oldSize = this.calc_image_size(base64);
+      if (oldSize > minImageSize) {
+        const resizedBase64 = await this.reduce_image_file_size(
+          base64,
+          maxImageWidth,
+          maxImageHeight
+        );
+        const newSize = this.calc_image_size(resizedBase64);
+        console.log("New Size: ", newSize, "KB");
+        console.log("Old Size: ", oldSize, "KB");
+        return resizedBase64;
+      } else {
+        console.log("Image already small enough");
+        return base64;
+      }
+    },
+    calc_image_size(image) {
+      let y = 1;
+      if (image.endsWith("==")) {
+        y = 2;
+      }
+      const x_size = image.length * (3 / 4) - y;
+      return Math.round(x_size / 1024);
+    },
+
+    async reduce_image_file_size(base64Str, MAX_WIDTH = 450, MAX_HEIGHT = 450) {
+      return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.src = base64Str;
+        img.onload = () => {
+          let canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          let ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const resizedBase64 = canvas.toDataURL();
+
+          resolve(resizedBase64);
+        };
+
+        img.onerror = (error) => {
+          reject(error);
+        };
+      });
+    },
+
+    // decrypt(encryptedUrl) {
+    //   console.log(encryptedUrl);
+    //   const decryptData = CryptoJS.AES.decrypt(
+    //     encryptedUrl,
+    //     this.secret
+    //   ).toString(CryptoJS.enc.Utf8);
+    //   return decryptData;
+    // },
+
+    encrypt(url) {
+      if (url.length) {
+        // hash the name with any algorithm
+        const data = CryptoJS.AES.encrypt(url, this.secret).toString();
+
+        return data;
+      }
+    },
     AddcarModal() {
       carname.value = "";
       description.value = "";
@@ -389,19 +632,21 @@ export default {
       platNumber.value = "";
       selectedCarType.value = null;
       this.dialogAddcar = true;
+      this.car_img = null;
     },
 
-    deletecarAlert(id, carName, price, color, plateNum, type) {
+    deletecarAlert(id, carName, price, color, plateNum, type, img) {
       this.dialogMessage = "ยืนยันการลบรถเช่า ";
       this.nameCarInfo = `ชื่อรถ: ${carName}`;
       this.typeCarInfo = `ประเภท: ${type}`;
       this.platNumberInfo = `หมายเลขทะเบียน: ${plateNum}`;
       this.colorShow = `สี: ${color}`;
       this.rentPriceInfo = price;
+      this.carShowimgDelete = img;
       this.dialog = true;
       this.cidToDelete = id;
     },
-    editCarAlert(id, description, carName, price, color, plateNum, type) {
+    editCarAlert(id, description, carName, price, color, plateNum, type, img) {
       this.carname = carName;
       this.description = description;
       this.pricePerday = price;
@@ -409,34 +654,40 @@ export default {
       this.platNumber = plateNum;
       this.selectedCarType = type;
       this.dialogEditcar = true;
+      this.carShowimgEdit = img;
+      this.car_img_send_edit = this.encrypt(img);
       this.cidToEdit = id;
     },
     confirmAddCar() {
-      const carData = {
+      console.log(this.car_img[0]);
+      if(carname.value!=''&&description.value !=''&&pricePerday.value !=0&&color.value !=''&&platNumber.value !=''&&this.car_img_send_add !=''&& pricePerday.value>=0&&this.car_img[0]!=null&&selectedCarType.value!=null){
+        this.dialogAddcar = false;
+        const carData = {
         car_name: carname.value,
         description: description.value,
         price_per_day: pricePerday.value,
         color: color.value,
         plat_number: platNumber.value,
+        image_path: this.car_img_send_add,
       };
       carTypeId.value = selectedCarType.value;
       const requestOptions = {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8",
         },
         body: JSON.stringify(carData),
       };
 
       fetch(
-        `http://localhost:8081/Car_rental_backend/cars/` + carTypeId.value.type_id,
+        `http://localhost:8081/Car_rental_backend/cars/` +
+          carTypeId.value.type_id,
         requestOptions
       )
         .then((response) => response.text())
-        .then((result) => {
-          window.location.reload();
-        })
-        .catch(window.location.reload());
+        .then((result) => {})
+        .catch();
+    }
     },
     deleteCar(id) {
       var myHeaders = new Headers();
@@ -452,7 +703,10 @@ export default {
         redirect: "follow",
       };
 
-      fetch("http://localhost:8081/Car_rental_backend/cars/" + id, requestOptions)
+      fetch(
+        "http://localhost:8081/Car_rental_backend/cars/" + id,
+        requestOptions
+      )
         .then((response) => response.json())
         .then((result) => {
           window.location.reload();
@@ -460,25 +714,26 @@ export default {
         .catch(window.location.reload());
     },
     editCar(id) {
-      
-        console.log("work");
+      console.log("work");
       var myHeaders = new Headers();
-
-      const carData = {
+      if(carname.value!=''&&description.value !=''&&pricePerday.value !=0&&color.value !=''&&platNumber.value !=''&&this.car_img_send_add !=''&& pricePerday.value>0&&this.car_img_send_edit!=null){
+        this.dialogEditcar = false;
+        const carData = {
         car_name: carname.value,
         description: description.value,
         price_per_day: pricePerday.value,
         color: color.value,
         plat_number: platNumber.value,
+        image_path: this.car_img_send_edit,
       };
       carTypeId.value = selectedCarType.value;
       console.log(carTypeId.value.type_id);
       console.log(id);
-      myHeaders.append("Content-Type", "application/json");
+      // myHeaders.append("Content-Type", "application/json; charset=UTF-8");
       const requestOptions = {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8",
         },
         body: JSON.stringify(carData),
       };
@@ -492,22 +747,18 @@ export default {
       )
         .then((response) => response.text())
         .then((result) => {
-         
           window.location.reload();
         })
         .catch((error) => console.log("error", error));
+      }
     },
     confirmDeleteCar() {
       this.dialog = false;
       this.deleteCar(this.cidToDelete);
     },
     confirmEditCar() {
-      this.dialogEditcar = false;
       this.editCar(this.cidToEdit);
     },
-    //   onEdit(eid) {
-    //     router.push("/update/" + eid);
-    //   },
   },
 };
 </script>
@@ -589,7 +840,49 @@ h6 {
   margin-top: 0.5rem;
   margin-left: 0.5rem;
 }
-.topicModal{
+.topicModal {
   font-weight: bold;
+}
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  margin-left: 36%;
+  margin-right: 60%;
+}
+
+.centered-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* Optional, to control how the image fills the container */
+}
+
+.my-sticky-header-table::v-deep .q-table__top,
+.my-sticky-header-table::v-deep .q-table__bottom,
+.my-sticky-header-table::v-deep thead tr:first-child th {
+  background-color: #222222;
+  color: white;
+}
+
+.my-sticky-header-table::v-deep thead tr th {
+  position: sticky;
+  z-index: 1;
+}
+
+.my-sticky-header-table::v-deep thead tr:first-child th {
+  top: 0;
+}
+
+.my-sticky-header-table::v-deep.q-table--loading thead tr:last-child th {
+  top: 48px;
+}
+
+.my-sticky-header-table {
+  scroll-margin-top: 48px;
+  height: 470px;
+  width: 100%;
 }
 </style>

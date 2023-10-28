@@ -29,12 +29,15 @@
             />
           </div>
           <q-table
+            class="my-sticky-header-table"
             flat
             bordered
             :rows="rows"
             :columns="columns"
             row-key="user_id"
             :filter="filter"
+            :rows-per-page-options="[10]"
+            no-data-label="ไม่มีข้อมูลลูกค้า"
           >
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
@@ -275,5 +278,30 @@ h6 {
   background-color: rgb(255, 255, 255);
   margin-top: 0.5rem;
   margin-left: 0.5rem;
+}
+.my-sticky-header-table::v-deep .q-table__top,
+.my-sticky-header-table::v-deep .q-table__bottom,
+.my-sticky-header-table::v-deep thead tr:first-child th {
+  background-color: #222222;
+  color: white;
+}
+
+.my-sticky-header-table::v-deep thead tr th {
+  position: sticky;
+  z-index: 1;
+}
+
+.my-sticky-header-table::v-deep thead tr:first-child th {
+  top: 0;
+}
+
+.my-sticky-header-table::v-deep.q-table--loading thead tr:last-child th {
+  top: 48px;
+}
+
+.my-sticky-header-table {
+  scroll-margin-top: 48px;
+  height: 470px;
+  width: 100%;
 }
 </style>

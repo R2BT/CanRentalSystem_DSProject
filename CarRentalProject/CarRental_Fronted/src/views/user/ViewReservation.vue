@@ -6,9 +6,9 @@
         <div class="clock-container">
           <div class="clock">
             <q-table
-            class="my-sticky-header-table"
-                flat
-                bordered
+              class="my-sticky-header-table"
+              flat
+              bordered
               title="รายการเช่ารถของฉัน"
               :rows="rows"
               :columns="columns"
@@ -16,7 +16,19 @@
               row-key="reservation_id"
               :rows-per-page-options="[10]"
             >
-            
+            <template #body-cell-Carimage="props">
+              <img
+                v-if="props.row.image_path"
+                :src="props.row.image_path"
+                alt="Car Image"
+                style="
+                  width: 160px;
+                  height: 120px;
+                  display: block;
+                  margin: 0 auto;
+                "
+              />
+            </template>
               <template #body-cell-action="props">
                 <q-btn
                   icon="edit"
@@ -28,7 +40,6 @@
                   color="negative"
                   @click="deleteCar(props.row.car_id)"
                 />
-                
               </template>
               <template v-slot:top-right>
                 <q-input
@@ -55,8 +66,10 @@
 
 <script>
 import Navbar from "../../components/EmployeeHeader.vue";
+import CryptoJS from "crypto-js";
 import { ref } from "vue";
 import axios from "axios";
+
 const columns = ref([
   // {
   //   name: "ID",
@@ -65,27 +78,27 @@ const columns = ref([
   //   field: "reservation_id",
   //   sortable: true,
   // },
-  {
-    name: "Firstname",
-    align: "left",
-    label: "Firstname",
-    field: (row) => row.user.user_firstname,
-    sortable: true,
-  },
-  {
-    name: "Lastname",
-    align: "left",
-    label: "Lastname",
-    field: (row) => row.user.user_surname,
-    sortable: true,
-  },
-  {
-    name: "Phonenumber",
-    align: "left",
-    label: "Phonenumber",
-    field: (row) => row.user.user_phonenumber,
-    sortable: true,
-  },
+  // {
+  //   name: "Firstname",
+  //   align: "left",
+  //   label: "Firstname",
+  //   field: (row) => row.user.user_firstname,
+  //   sortable: true,
+  // },
+  // {
+  //   name: "Lastname",
+  //   align: "left",
+  //   label: "Lastname",
+  //   field: (row) => row.user.user_surname,
+  //   sortable: true,
+  // },
+  // {
+  //   name: "Phonenumber",
+  //   align: "left",
+  //   label: "Phonenumber",
+  //   field: (row) => row.user.user_phonenumber,
+  //   sortable: true,
+  // },
   {
     name: "Car",
     align: "left",
@@ -135,13 +148,25 @@ const columns = ref([
     field: (row) => row.total_cost,
     sortable: true,
   },
+  {
+    name: "Carimage",
+    align: "center",
+    label: "รูปรถเช่า",
+    field: (row) => row.car.image_path,
+  },
   // { name: 'action', align: 'center', field: 'reservation_id'  }
 ]);
 const rows = ref([]);
+const decrypt = (encryptedUrl) => {
+  console.log(encryptedUrl);
+  const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
+    CryptoJS.enc.Utf8
+  );
+  return decryptData;
+};
 const fetchData = () => {
   const myItem = localStorage.getItem("user-info");
   const userInfo = JSON.parse(myItem);
-
 
   axios
     .get(
@@ -150,8 +175,13 @@ const fetchData = () => {
         "/reservations"
     )
     .then((response) => {
-      rows.value = response.data;
-      //  console.log(rows.value[0].car_type.type_model)
+      const decryptedRows = response.data.map((row) => {
+        return {
+          ...row,
+          image_path: decrypt(row.car.image_path),
+        };
+      });
+      rows.value = decryptedRows;
     });
 };
 
@@ -180,7 +210,7 @@ export default {
       filter: ref(""),
       columns,
       rows,
-      userInfo
+      userInfo,
     };
   },
   components: {

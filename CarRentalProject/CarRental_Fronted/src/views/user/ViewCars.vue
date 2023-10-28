@@ -6,16 +6,29 @@
         <div class="clock-container">
           <div class="clock">
             <q-table
-            class="my-sticky-header-table"
-                flat
-                bordered
-              title="รายการรถยนต์ที่ให้เช่า"
+              class="my-sticky-header-table"
+              flat
+              bordered
+              title="รถเช่าทั้งหมด"
               :rows="rows"
               :columns="columns"
               :filter="filter"
               row-key="car_id"
               :rows-per-page-options="[10]"
             >
+              <template v-slot:body-cell-Carimage="props">
+                <img
+                  v-if="props.row.image_path"
+                  :src="props.row.image_path"
+                  alt="Car Image"
+                  style="
+                    width: 160px;
+                    height: 120px;
+                    display: block;
+                    margin: 0 auto;
+                  "
+                />
+              </template>
               <template #body-cell-action="props">
                 <q-btn
                   icon="edit"
@@ -56,7 +69,7 @@ import Navbar from "../../components/EmployeeHeader.vue";
 import { ref } from "vue";
 import CarService from "../../service/Carservice";
 import axios from "axios";
-
+import CryptoJS from "crypto-js";
 const columns = ref([
   // { name: "ID", align: "left", label: "ID", field: "car_id", sortable: true },
   {
@@ -101,21 +114,37 @@ const columns = ref([
     field: (row) => row.car_type.type_model,
     sortable: true,
   },
-
+  {
+    name: "Carimage",
+    align: "center",
+    label: "รูปรถเช่า",
+    field: (row) => row.image_path,
+    sortable: true,
+  },
 ]);
 const rows = ref([]);
+const decrypt = (encryptedUrl) => {
+  console.log(encryptedUrl);
+  const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
+    CryptoJS.enc.Utf8
+  );
+  return decryptData;
+};
 const fetchData = () => {
   CarService.getCar().then((response) => {
-    rows.value = response.data;
+    const decryptedRows = response.data.map((row) => {
+      return {
+        ...row,
+        image_path: decrypt(row.image_path),
+      };
+    });
+    rows.value = decryptedRows;
   });
 };
-const createCar = () => {
-  router.push("/createcar");
-};
+
 fetchData();
 
 const myItem = localStorage.getItem("user-info");
-
 
 // if (myItem !== null) {
 //   console.log(myItem);
@@ -155,7 +184,7 @@ export default {
       filter: ref(""),
       columns,
       rows,
-      userInfo
+      userInfo,
     };
   },
   components: {

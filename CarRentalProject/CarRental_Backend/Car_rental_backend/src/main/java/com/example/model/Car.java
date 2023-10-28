@@ -21,6 +21,8 @@ public class Car {
 	private String color;
 	@Column(name = "plat_number")
 	private String plat_number;
+	@Column(name = "image_path") 
+	private String image_path;
 	
 	@ManyToOne
     @JoinColumn(name="type_id", nullable=true)
@@ -28,7 +30,7 @@ public class Car {
 	
 	
 	public Car(int car_id, String car_name, String description, double price_per_day, String color, String plat_number,
-			Car_Type car_type) {
+			Car_Type car_type, String image_path) {
 		super();
 		this.car_id = car_id;
 		this.car_name = car_name;
@@ -37,6 +39,7 @@ public class Car {
 		this.color = color;
 		this.plat_number = plat_number;
 		this.car_type = car_type;
+		this.image_path = image_path;
 	}
 	public Car() {
 		
@@ -83,5 +86,12 @@ public class Car {
 	public void setCar_type(Car_Type car_type) {
 		this.car_type = car_type;
 	}
+	public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
 	
 }

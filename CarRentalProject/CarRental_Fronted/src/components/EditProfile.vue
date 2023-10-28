@@ -83,7 +83,7 @@ export default {
       console.log(this.phonenumber);
       if(this.username!=''&&this.password!=''&&this.firstname!=''&&this.surname!=''&&this.phonenumber!=''){
         var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Content-Type", "application/json; charset=UTF-8");
         const raw = {
           user_id: this.idUser,
           user_username: this.username,
