@@ -176,13 +176,13 @@ const columns = ref([
     field: (row) => row.car.plat_number,
     sortable: true,
   },
-  {
-    name: "Price/Day",
-    align: "left",
-    label: "Price/Day",
-    field: (row) => row.car.price_per_day,
-    sortable: true,
-  },
+  // {
+  //   name: "Price/Day",
+  //   align: "left",
+  //   label: "Price/Day",
+  //   field: (row) => row.car.price_per_day,
+  //   sortable: true,
+  // },
   {
     name: "CarType",
     align: "left",

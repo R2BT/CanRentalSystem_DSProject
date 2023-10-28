@@ -118,10 +118,10 @@
           <img src="../assets/image/man.png" />
         </q-avatar>
         <div>
-          <div v-if="userInfo.user_type === 'USER'">ข้อมูลผู้เช่า</div>
+          <div  v-if="userInfo.user_type !== 'ADMIN'">ข้อมูลผู้เช่า</div>
           <div v-else>{{ userInfo.user_type }}</div>
         </div>
-        <div class="text-weight-bold">
+        <div class="text-weight-bold"  v-if="userInfo.user_type !== 'ADMIN'">
           {{ userInfo.user_firstname }} {{ userInfo.user_surname }}
         </div>
         <div>
