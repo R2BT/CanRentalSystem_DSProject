@@ -100,6 +100,20 @@ const columns = ref([
   //   sortable: true,
   // },
   {
+    name: "StarDate",
+    align: "left",
+    label: "วันที่เริ่มเช่า",
+    field: (row) => formatDate(row.start_date),
+    sortable: true,
+  },
+  {
+    name: "EndDate",
+    align: "left",
+    label: "วันที่สิ้นสุดการเช่า",
+    field: (row) => formatDate(row.end_date),
+    sortable: true,
+  },
+  {
     name: "Car",
     align: "left",
     label: "ชื่อรถ",
@@ -125,20 +139,6 @@ const columns = ref([
     align: "left",
     label: "ประเภท",
     field: (row) => row.car.car_type.type_model,
-    sortable: true,
-  },
-  {
-    name: "StarDate",
-    align: "left",
-    label: "วันที่เริ่มเช่า",
-    field: (row) => formatDate(row.start_date),
-    sortable: true,
-  },
-  {
-    name: "EndDate",
-    align: "left",
-    label: "วันที่สิ้นสุดการเช่า",
-    field: (row) => formatDate(row.end_date),
     sortable: true,
   },
   {

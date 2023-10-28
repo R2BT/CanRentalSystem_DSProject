@@ -11,7 +11,7 @@
           </div>
 
           <div class="background-container">
-            <div class="block-background " style="width: 35%; height: 60%">
+            <div class="block-background" style="width: 35%; height: 60%">
               <h6>จัดการข้อมูล</h6>
               <h2>รายการเช่ารถ</h2>
             </div>
@@ -38,7 +38,7 @@
             :filter="filter"
             no-data-label="ไม่มีข้อมูลรายการเช่ารถ"
           >
-          <template #body-cell-Carimage="props">
+            <template #body-cell-Carimage="props">
               <img
                 v-if="props.row.image_path"
                 :src="props.row.image_path"
@@ -56,18 +56,21 @@
                 <q-btn
                   icon="delete"
                   color="negative"
-                  @click="reservationAlert(props.row.reservation_id, 
-                        props.row.user.user_firstname,
-                        props.row.user.user_surname,
-                        props.row.user.user_phonenumber,
-                        props.row.car.car_name,
-                        props.row.car.plat_number,
-                        props.row.car.car_type.type_model,
-                        props.row.start_date,
-                        props.row.end_date,
-                        props.row.total_cost,
-                        props.row.image_path
-                        )"
+                  @click="
+                    reservationAlert(
+                      props.row.reservation_id,
+                      props.row.user.user_firstname,
+                      props.row.user.user_surname,
+                      props.row.user.user_phonenumber,
+                      props.row.car.car_name,
+                      props.row.car.plat_number,
+                      props.row.car.car_type.type_model,
+                      props.row.start_date,
+                      props.row.end_date,
+                      props.row.total_cost,
+                      props.row.image_path
+                    )
+                  "
                 ></q-btn>
               </q-td>
             </template>
@@ -86,19 +89,20 @@
           class="text-h6 start-container text-center"
           style="margin-bottom: 0"
         >
-          <div style="font-size: 18px font-weight: bold; margin-bottom: 10px;">{{ dialogMessage }}<br />           
-             <img
-                            :src="carShowimgDelete"
-
-                              alt="Car Image"
-                              style="
-                                width: 160px;
-                                height: 120px;
-                                display: block;
-                                margin: 0 auto;
-                                margin-top: 10px;
-                              "
-                            /><br /></div>
+          <div style="font-size: 18px font-weight: bold; margin-bottom: 10px;">
+            {{ dialogMessage }}<br />
+            <img
+              :src="carShowimgDelete"
+              alt="Car Image"
+              style="
+                width: 160px;
+                height: 120px;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+              "
+            /><br />
+          </div>
         </q-card-title>
         <q-card-title class="text-h6 start-container" style="margin-bottom: 0">
           <div style="font-size: 13px">
@@ -107,7 +111,8 @@
             {{ nameCarInfo }}<br />
             {{ typeCarInfo }}<br />
             {{ platNumberInfo }}<br />
-            วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า: {{ rentStartdate }} - {{ rentEnddate }}<br />
+            วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า: {{ rentStartdate }} -
+            {{ rentEnddate }}<br />
             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
             ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
           </div>
@@ -118,7 +123,11 @@
       </q-card-section>
       <q-card-actions align="center" style="padding-top: 10px">
         <q-btn label="ยกเลิก" color="negative" @click="dialog = false" />
-        <q-btn label="ยืนยัน" color="positive" @click="confirmDeleteReservation" />
+        <q-btn
+          label="ยืนยัน"
+          color="positive"
+          @click="confirmDeleteReservation"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -141,6 +150,20 @@ const columns = ref([
   //     field: "reservation_id",
   //     sortable: true,
   //   },
+  {
+    name: "StarDate",
+    align: "left",
+    label: "วันที่เริ่มเช่า",
+    field: (row) => formatDate(row.start_date),
+    sortable: true,
+  },
+  {
+    name: "EndDate",
+    align: "left",
+    label: "วันที่สิ้นสุดการเช่า",
+    field: (row) => formatDate(row.end_date),
+    sortable: true,
+  },
   {
     name: "Firstname",
     align: "left",
@@ -191,20 +214,6 @@ const columns = ref([
     sortable: true,
   },
   {
-    name: "StarDate",
-    align: "left",
-    label: "วันที่เริ่มเช่า",
-    field: (row) => formatDate(row.start_date),
-    sortable: true,
-  },
-  {
-    name: "EndDate",
-    align: "left",
-    label: "วันที่สิ้นสุดการเช่า",
-    field: (row) => formatDate(row.end_date),
-    sortable: true,
-  },
-  {
     name: "TotalCost",
     align: "left",
     label: "ราคาเช่าทั้งหมด(บาท)",
@@ -212,29 +221,29 @@ const columns = ref([
     sortable: true,
   },
   {
-        name: "Carimage",
-        align: "center",
-        label: "รูปรถเช่า",
-        field: (row) => row.car.image_path,
-      },
+    name: "Carimage",
+    align: "center",
+    label: "รูปรถเช่า",
+    field: (row) => row.car.image_path,
+  },
   { name: "action", align: "center", field: "reservation_id" },
 ]);
 const decrypt = (encryptedUrl) => {
-      console.log(encryptedUrl);
-      const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
-        CryptoJS.enc.Utf8
-      );
-      return decryptData;
-    };
+  console.log(encryptedUrl);
+  const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
+    CryptoJS.enc.Utf8
+  );
+  return decryptData;
+};
 const fetchData = () => {
   ReservationService.getReservation().then((response) => {
     const decryptedRows = response.data.map((row) => {
-                return {
-                  ...row,
-                  image_path: decrypt(row.car.image_path),
-                };
-              });
-              rows.value = decryptedRows;
+      return {
+        ...row,
+        image_path: decrypt(row.car.image_path),
+      };
+    });
+    rows.value = decryptedRows;
   });
 };
 const formatDate = (dateString) => {
@@ -272,25 +281,36 @@ export default {
     Navbar,
   },
   methods: {
-    reservationAlert(id,firstname,lastname,phonenumber, carname, platNumber, type,startdate,enddate,price,img){
+    reservationAlert(
+      id,
+      firstname,
+      lastname,
+      phonenumber,
+      carname,
+      platNumber,
+      type,
+      startdate,
+      enddate,
+      price,
+      img
+    ) {
       this.dialogMessage = "ยืนยันลบรายการเช่ารถ ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
-      this.phoneNumber =  `เบอร์โทรศัพท์ : ${phonenumber}`;
+      this.phoneNumber = `เบอร์โทรศัพท์ : ${phonenumber}`;
       this.nameCarInfo = `ชื่อรถ: ${carname}`;
       this.typeCarInfo = `ประเภท: ${type}`;
       this.platNumberInfo = `หมายเลขทะเบียน: ${platNumber}`;
-      this.rentStartdate = formatDate(`${startdate}`)
-      this.rentEnddate = formatDate(`${enddate}`)
+      this.rentStartdate = formatDate(`${startdate}`);
+      this.rentEnddate = formatDate(`${enddate}`);
       const startDate = new Date(startdate);
       const endDate = new Date(enddate);
-      const dayDifference = ((endDate - startDate) / (1000 * 60 * 60 * 24))+1;
+      const dayDifference = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
       this.countDay = dayDifference;
-      this.rentPriceInfo = price ;
+      this.rentPriceInfo = price;
       this.dialog = true;
       this.carShowimgDelete = img;
       this.actionColor = "negative";
       this.ridToDelete = id;
-
     },
     deleteReservation(id) {
       var myHeaders = new Headers();
@@ -303,11 +323,14 @@ export default {
       var requestOptions = {
         method: "DELETE",
         headers: myHeaders,
-        body: JSON.stringify(raw), 
+        body: JSON.stringify(raw),
         redirect: "follow",
       };
 
-      fetch("http://localhost:8081/Car_rental_backend/reservations/" + id, requestOptions)
+      fetch(
+        "http://localhost:8081/Car_rental_backend/reservations/" + id,
+        requestOptions
+      )
         .then((response) => response.json())
         .then((result) => {
           window.location.reload();
@@ -318,7 +341,6 @@ export default {
       this.dialog = false;
       this.deleteReservation(this.ridToDelete);
     },
-
   },
 };
 </script>
