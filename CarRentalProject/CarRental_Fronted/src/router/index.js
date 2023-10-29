@@ -8,6 +8,7 @@ import Viewcars from "../views/user/ViewCars.vue";
 import AdminCar from "../views/admin/AdminCar.vue";
 import AdminUser from "../views/admin/AdminUser.vue";
 import AdminReservation from "../views/admin/AdminReservation.vue";
+import AdminHistoryReservation from "../views/admin/AdminHistoryReservation.vue";
 import ViewReservations from "../views/user/ViewReservation.vue";
 import Register from "../views/register/Register.vue";
 import RegisterSuccess from "../views/register/RegisterSuccess.vue";
@@ -73,6 +74,11 @@ const router = createRouter({
       path: "/adminpanel/reservations",
       name: "adminreservation",
       component: AdminReservation,
+    },
+    {
+      path: "/adminpanel/reservations/history",
+      name: "adminhistoryservation",
+      component: AdminHistoryReservation,
     },
     {
       path: "/adminpanel/cars",

@@ -54,7 +54,7 @@
             <q-item-section avatar>
               <q-icon name="view_list" />
             </q-item-section>
-            <q-item-section> รายการรถที่ให้เช่า </q-item-section>
+            <q-item-section> รถเช่าที่ให้บริการในร้าน </q-item-section>
           </q-item>
         </router-link>
         <router-link

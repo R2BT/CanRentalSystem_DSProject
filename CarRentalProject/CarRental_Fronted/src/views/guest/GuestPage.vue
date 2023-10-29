@@ -120,6 +120,7 @@ import router from "../../router";
 
 export default {
   setup() {
+    localStorage.clear();
     return {
       slide: ref(1),
       autoplay: ref(false),

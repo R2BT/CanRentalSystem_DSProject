@@ -75,6 +75,7 @@
                 no-data-label="กรุณาเลือกวันที่เริ่มเช่าและวันที่สิ้นสุดการเช่า"
               >
                 <template #body-cell-Carimage="props">
+                  <div style="margin-top:30px;">
                   <img
                     v-if="props.row.image_path"
                     :src="props.row.image_path"
@@ -85,9 +86,10 @@
                       display: block;
                       margin: 0 auto;
                     "
-                  />
+                  /></div>
                 </template>
                 <template #body-cell-action="props">
+                  <div style="margin-right:37%;">
                   <q-btn
                     label="เช่า"
                     color="orange"
@@ -97,6 +99,7 @@
                       margin-right: 20px;
                       margin-top: 5px;
                       margin-left: 30%;
+                      
                       margin-bottom: 20px;
                     "
                     @click="
@@ -109,7 +112,8 @@
                         props.row.image_path
                       )
                     "
-                  />
+                  /></div>
+                  
                   <q-dialog v-model="dialog" persistent>
                     <q-card style="padding: 30px">
                       <q-card-section>
@@ -126,8 +130,7 @@
                           >
                             {{ dialogMessage }}<br />
                             <img
-                            :src="carShowimg"
-
+                              :src="carShowimg"
                               alt="Car Image"
                               style="
                                 width: 160px;
@@ -173,6 +176,23 @@
                           label="ยืนยัน"
                           color="positive"
                           @click="confirmRentCar"
+                        />
+                      </q-card-actions>
+                    </q-card>
+                  </q-dialog>
+                  <q-dialog v-model="notFoundcar" persistent>
+                    <q-card>
+                      <q-card-section style="width: 500px; height: 50px">
+                        <q-card-main>
+                          ขออภัยในความไม่สะดวกเนื่องจากไม่มีรถที่พร้อมให้บริการเช่าในวันที่ระบุ
+                          กรุณาเลือกวันที่ใหม่อีกครั้ง 
+                        </q-card-main>
+                      </q-card-section>
+                      <q-card-actions align="right">
+                        <q-btn
+                          label="ยืนยัน"
+                          color="negative"
+                          @click= "notFoundcar = true"
                         />
                       </q-card-actions>
                     </q-card>
@@ -315,7 +335,11 @@ export default {
                   image_path: decrypt(row.image_path),
                 };
               });
+              console.log(response);
               rows.value = decryptedRows;
+              if (decryptedRows.length === 0) {
+                alert(" ขออภัยในความไม่สะดวกเนื่องจากไม่มีรถที่พร้อมให้บริการเช่าในวันที่ระบุ กรุณาเลือกวันที่ใหม่อีกครั้ง");
+              }
             });
         } catch (error) {
           console.error("Find car rent failed:", error);

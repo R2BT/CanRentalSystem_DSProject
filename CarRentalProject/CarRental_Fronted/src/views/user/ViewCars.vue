@@ -9,7 +9,8 @@
               class="my-sticky-header-table"
               flat
               bordered
-              title="รถเช่าทั้งหมด"
+              title="
+รถเช่าที่ให้บริการในร้าน"
               :rows="rows"
               :columns="columns"
               :filter="filter"
