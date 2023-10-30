@@ -82,7 +82,7 @@
                       props.row.end_date,
                       props.row.total_cost,
                       props.row.image_path,
-                      props.row.car.price_per_day
+                      props.row.cost_per_day
                     )
                   "
                 ></q-btn>
@@ -301,6 +301,13 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "Costperday",
+    align: "left",
+    label: "ราคาเช่า/วัน (บาท)",
+    field: (row) => row.cost_per_day,
+    sortable: true,
+  },
+  {
     name: "TotalCost",
     align: "left",
     label: "ราคาเช่ารวมทั้งหมด(บาท)",
@@ -310,7 +317,7 @@ const columns = ref([
   {
     name: "Carimage",
     align: "center",
-    label: "รูปรถเช่า",
+    label: "รูปรถ",
     field: (row) => row.car.image_path,
   },
   { name: "action", align: "center", field: "reservation_id" },
@@ -390,7 +397,7 @@ export default {
       img,
       priceperday
     ) {
-      this.dialogMessage = "อนุมัติรายการเช่ารถเสร็จสิ้น";
+      this.dialogMessage = "สิ้นสุดการเช่ารถ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
       this.phoneNumberInfo = `เบอร์โทรศัพท์ : ${phonenumber}`;
       this.nameCarInfo = `ชื่อรถ: ${carname}`;
@@ -433,7 +440,7 @@ export default {
       price,
       img
     ) {
-      this.dialogMessage = "ยืนยันยกเลิกรายการเช่ารถ ";
+      this.dialogMessage = "ยกเลิกรายการเช่ารถ ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
       this.phoneNumberInfo = `เบอร์โทรศัพท์ : ${phonenumber}`;
       this.nameCarInfo = `ชื่อรถ: ${carname}`;
@@ -516,7 +523,7 @@ export default {
         start_date: this.startDate,
         end_date: this.endDate,
         total_cost: this.totalcost,
-        price_per_day: this.priceperday,
+        cost_per_day: this.priceperday,
         image_path: this.imgpath,
       };
 

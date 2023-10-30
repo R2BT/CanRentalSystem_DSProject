@@ -142,9 +142,16 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "Costperday",
+    align: "left",
+    label: "ราคาเช่า/วัน (บาท)",
+    field: (row) => row.cost_per_day,
+    sortable: true,
+  },
+  {
     name: "TotalCost",
     align: "left",
-    label: "ราคาเช่าทั้งหมด(บาท)",
+    label: "รวมราคาเช่าทั้งหมด(บาท)",
     field: (row) => row.total_cost,
     sortable: true,
   },

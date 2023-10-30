@@ -142,13 +142,13 @@
       field: (row) => row.car_typemodel,
       sortable: true,
     },
-    // {
-    //   name: "TotalCost",
-    //   align: "left",
-    //   label: "ราคาเช่า(บาท)/วัน",
-    //   field: (row) => row.price_per_day,
-    //   sortable: true,
-    // },
+    {
+      name: "TotalCost",
+      align: "left",
+      label: "ราคาเช่า/วัน (บาท)",
+      field: (row) => row.cost_per_day,
+      sortable: true,
+    },
     {
       name: "TotalCost",
       align: "left",

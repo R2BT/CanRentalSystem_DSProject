@@ -33,8 +33,8 @@ public class HistoryReservation {
     private Date start_date;
     @Column(name = "end_date")
     private Date end_date;
-    @Column(name = "price_per_day")
-    private double price_per_day;
+    @Column(name = "cost_per_day")
+    private double cost_per_day;
     @Column(name = "total_cost")
     private double total_cost;
 
@@ -44,7 +44,7 @@ public class HistoryReservation {
 
     public HistoryReservation(int history_reservation_id, String user_firstname, String user_lastname, String user_phone,
             String car_name, String car_platenumber, String car_typemodel, String image_path, Date start_date, Date end_date,
-            double total_cost, double price_per_day) {
+            double total_cost, double cost_per_day) {
         super();
         this.history_reservation_id = history_reservation_id;
         this.user_firstname = user_firstname;
@@ -57,7 +57,7 @@ public class HistoryReservation {
         this.start_date = start_date;
         this.end_date = end_date;
         this.total_cost = total_cost;
-        this.price_per_day = price_per_day;
+        this.cost_per_day = cost_per_day;
     }
 
     public int getHistoryReservation_id() {
@@ -140,12 +140,12 @@ public class HistoryReservation {
         this.end_date = end_date;
     }
 
-    public double getPrice_per_day() {
-        return price_per_day;
+    public double getcost_per_day() {
+        return cost_per_day;
     }
 
-    public void setPrice_per_day(double price_per_day) {
-        this.price_per_day = price_per_day;
+    public void setcost_per_day(double cost_per_day) {
+        this.cost_per_day = cost_per_day;
     }
 
     public double getTotal_cost() {

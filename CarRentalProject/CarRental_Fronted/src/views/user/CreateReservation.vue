@@ -152,6 +152,7 @@
                             {{ platNumberInfo }}<br />
                             วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า:
                             {{ rentStartdate }} - {{ rentEnddate }}<br />
+                            ราคาเช่า/วัน: {{  priceRentperday }} บาท<br />
                             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
                             ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
                           </div>
@@ -258,12 +259,14 @@ export default {
 
       const dayDifference = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
       this.rentPriceInfo = pricePerDay * dayDifference;
+      this.priceRentperday = pricePerDay;
       this.countDay = dayDifference;
       this.dialogMessage = "ยืนยันรายการเช่ารถ ";
       this.nameCarInfo = `ชื่อรถ: ${name}`;
       this.typeCarInfo = `ประเภท: ${type}`;
       this.platNumberInfo = `หมายเลขทะเบียน: ${platNumber}`;
       console.log(id);
+      this.pricePerdaysend =  pricePerDay;
       this.dialog = true;
       this.actionColor = "negative";
       this.carShowimg = img;
@@ -282,7 +285,7 @@ export default {
     const currentDate = ref("");
     const rentStartdate = ref(null);
     const rentEnddate = ref(null);
-
+    const pricePerdaysend = ref(null);
     const updateClock = () => {
       const now = new Date();
       const hours = now.getHours();
@@ -380,7 +383,7 @@ export default {
       {
         name: "Price/Day",
         align: "left",
-        label: "ราคาเช่า(บาท)/วัน",
+        label: "ราคาเช่า/วัน (บาท)",
         field: "price_per_day",
         sortable: true,
       },
@@ -428,6 +431,7 @@ export default {
       var raw = JSON.stringify({
         start_date: formattedStartDate,
         end_date: formattedEndDate,
+        cost_per_day: pricePerdaysend.value
       });
 
       var requestOptions = {
@@ -472,6 +476,7 @@ export default {
       columns,
       rows,
       rentCar,
+      pricePerdaysend,
       userInfo,
     };
   },

@@ -31,6 +31,8 @@ public class Reservation {
 	private Date start_date;
 	@Column(name = "end_date")
 	private Date end_date;
+	@Column(name = "cost_per_day")
+	private double cost_per_day;
 	@Column(name = "total_cost")
 	private double total_cost;
 	
@@ -40,7 +42,7 @@ public class Reservation {
 		
 	}
 
-	public Reservation(int reservation_id, Users user, Car car, Date start_date, Date end_date, double total_cost) {
+	public Reservation(int reservation_id, Users user, Car car, Date start_date, Date end_date, double total_cost, double cost_per_day) {
 		super();
 		this.reservation_id = reservation_id;
 		this.user = user;
@@ -48,6 +50,7 @@ public class Reservation {
 		this.start_date = start_date;
 		this.end_date = end_date;
 		this.total_cost = total_cost;
+		this.cost_per_day = cost_per_day;
 	}
 
 	public int getReservation_id() {
@@ -56,6 +59,14 @@ public class Reservation {
 
 	public void setReservation_id(int reservation_id) {
 		this.reservation_id = reservation_id;
+	}
+
+	public double getcost_per_day() {
+		return cost_per_day;
+	}
+
+	public void setcost_per_day(double cost_per_day) {
+		this.cost_per_day = cost_per_day;
 	}
 
 	public Users getUser() {

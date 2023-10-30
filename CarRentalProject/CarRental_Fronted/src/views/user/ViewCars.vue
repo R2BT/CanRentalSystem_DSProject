@@ -90,7 +90,7 @@ const columns = ref([
   {
     name: "Price/Day",
     align: "left",
-    label: "ราคาเช่า(บาท)/วัน",
+    label: "ราคาเช่า/วัน (บาท)",
     field: "price_per_day",
     sortable: true,
   },
