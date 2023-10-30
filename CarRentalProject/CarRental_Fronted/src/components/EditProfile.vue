@@ -80,7 +80,6 @@ export default {
      
     },
     async onSubmit() {
-      console.log(this.phonenumber);
       if(this.username!=''&&this.password!=''&&this.firstname!=''&&this.surname!=''&&this.phonenumber!=''){
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json; charset=UTF-8");

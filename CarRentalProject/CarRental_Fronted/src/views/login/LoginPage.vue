@@ -108,14 +108,11 @@ const showAlertDialog = ref(false);
 
 async function login() {
   if (Username.value != null && Password.value != null) {
-    console.log(Username.value);
-    console.log(Password.value);
 
     try {
       let result = await axios.get(
         `http://localhost:8081/Car_rental_backend/users/login?username=${Username.value}&password=${Password.value}`
       );
-      console.log(result);
 
       if (result.status === 200) {
         // Handle success

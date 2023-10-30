@@ -265,7 +265,6 @@ export default {
       this.nameCarInfo = `ชื่อรถ: ${name}`;
       this.typeCarInfo = `ประเภท: ${type}`;
       this.platNumberInfo = `หมายเลขทะเบียน: ${platNumber}`;
-      console.log(id);
       this.pricePerdaysend =  pricePerDay;
       this.dialog = true;
       this.actionColor = "negative";
@@ -279,7 +278,6 @@ export default {
   },
   setup() {
     const myItem = localStorage.getItem("user-info");
-    console.log(myItem);
     const userInfo = JSON.parse(myItem);
     const currentTime = ref("");
     const currentDate = ref("");
@@ -310,7 +308,6 @@ export default {
       setInterval(updateClock, 1000);
     });
     const decrypt = (encryptedUrl) => {
-      console.log(encryptedUrl);
       const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
         CryptoJS.enc.Utf8
       );
@@ -338,7 +335,6 @@ export default {
                   image_path: decrypt(row.image_path),
                 };
               });
-              console.log(response);
               rows.value = decryptedRows;
               if (decryptedRows.length === 0) {
                 alert(" ขออภัยในความไม่สะดวกเนื่องจากไม่มีรถที่พร้อมให้บริการเช่าในวันที่ระบุ กรุณาเลือกวันที่ใหม่อีกครั้ง");
@@ -431,7 +427,8 @@ export default {
       var raw = JSON.stringify({
         start_date: formattedStartDate,
         end_date: formattedEndDate,
-        cost_per_day: pricePerdaysend.value
+        cost_per_day: pricePerdaysend.value,
+        status: "จองเช่ารถล่วงหน้า"
       });
 
       var requestOptions = {
@@ -443,7 +440,6 @@ export default {
 
       const myItem = localStorage.getItem("user-info");
       const userInfo = JSON.parse(myItem);
-      console.log(userInfo.user_id);
 
       fetch(
         "http://localhost:8081/Car_rental_backend/reservations/user/" +

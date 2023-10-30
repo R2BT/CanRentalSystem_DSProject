@@ -16,19 +16,27 @@
               row-key="reservation_id"
               :rows-per-page-options="[10]"
             >
-            <template #body-cell-Carimage="props">
-              <img
-                v-if="props.row.image_path"
-                :src="props.row.image_path"
-                alt="Car Image"
-                style="
-                  width: 160px;
-                  height: 120px;
-                  display: block;
-                  margin: 0 auto;
-                "
-              />
-            </template>
+              <template #body-cell-Status="props">
+                <q-td key="Status" :props="props">
+                  <q-badge
+                    :color="getStatusColor(props.row.status)"
+                    :label="props.row.status"
+                  />
+                </q-td>
+              </template>
+              <template #body-cell-Carimage="props">
+                <img
+                  v-if="props.row.image_path"
+                  :src="props.row.image_path"
+                  alt="Car Image"
+                  style="
+                    width: 160px;
+                    height: 120px;
+                    display: block;
+                    margin: 0 auto;
+                  "
+                />
+              </template>
               <template #body-cell-action="props">
                 <q-btn
                   icon="edit"
@@ -100,6 +108,13 @@ const columns = ref([
   //   sortable: true,
   // },
   {
+    name: "Status",
+    align: "left",
+    label: "สถานะ",
+    field: (row) => row.status,
+    sortable: true,
+  },
+  {
     name: "StarDate",
     align: "left",
     label: "วันที่เริ่มเช่า",
@@ -165,7 +180,6 @@ const columns = ref([
 ]);
 const rows = ref([]);
 const decrypt = (encryptedUrl) => {
-  console.log(encryptedUrl);
   const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
     CryptoJS.enc.Utf8
   );
@@ -222,6 +236,17 @@ export default {
   },
   components: {
     Navbar,
+  },
+  methods: {
+    getStatusColor(status) {
+      if (status === "จองเช่ารถล่วงหน้า") {
+        return "blue";
+      } else if (status === "อยู่ในระหว่างดำเนินการเช่ารถ") {
+        return "green";
+      } else {
+        return "default-color";
+      }
+    },
   },
 };
 </script>

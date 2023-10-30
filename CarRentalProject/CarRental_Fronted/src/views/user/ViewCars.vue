@@ -125,7 +125,6 @@ const columns = ref([
 ]);
 const rows = ref([]);
 const decrypt = (encryptedUrl) => {
-  console.log(encryptedUrl);
   const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
     CryptoJS.enc.Utf8
   );

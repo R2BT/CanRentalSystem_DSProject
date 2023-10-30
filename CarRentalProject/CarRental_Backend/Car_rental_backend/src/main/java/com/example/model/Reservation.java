@@ -35,6 +35,8 @@ public class Reservation {
 	private double cost_per_day;
 	@Column(name = "total_cost")
 	private double total_cost;
+	@Column(name = "status")
+	private String status;
 	
 
 	
@@ -42,7 +44,7 @@ public class Reservation {
 		
 	}
 
-	public Reservation(int reservation_id, Users user, Car car, Date start_date, Date end_date, double total_cost, double cost_per_day) {
+	public Reservation(int reservation_id, Users user, Car car, Date start_date, Date end_date, double total_cost, double cost_per_day,String status) {
 		super();
 		this.reservation_id = reservation_id;
 		this.user = user;
@@ -51,10 +53,19 @@ public class Reservation {
 		this.end_date = end_date;
 		this.total_cost = total_cost;
 		this.cost_per_day = cost_per_day;
+		this.status = status;
 	}
 
 	public int getReservation_id() {
 		return reservation_id;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public void setReservation_id(int reservation_id) {

@@ -116,7 +116,6 @@ export default {
       window.location.reload();
     },
     async onSubmit() {
-      console.log(this.phonenumber);
       if (
         this.username != "" &&
         this.password != "" &&

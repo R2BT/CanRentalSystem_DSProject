@@ -420,7 +420,6 @@ const columns = ref([
   { name: "action", align: "center", field: "car_id" },
 ]);
 const decrypt = (encryptedUrl) => {
-  console.log(encryptedUrl);
   const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
     CryptoJS.enc.Utf8
   );
@@ -451,7 +450,6 @@ export default {
     fetchData();
     fetchCarTypes();
     carTypeId.value = selectedCarType.value;
-    console.log(carTypeId.value);
     const myItem = localStorage.getItem("user-info");
     const userInfo = JSON.parse(myItem);
     return {
@@ -498,9 +496,6 @@ export default {
     async handleFileChange(event) {
       const base64 = ref();
       const base64Reducesize = ref();
-      console.log(this.car_img);
-      console.log("worked");
-      console.log(this.car_img[0].name);
       if (this.car_img != null) {
         this.car_show = URL.createObjectURL(this.car_img[0]);
         // const hashedURL = this.encrypt(this.car_show);
@@ -508,13 +503,10 @@ export default {
         base64Reducesize.value = await this.reduceSizeBase64(base64.value);
         this.car_img_send_add = this.encrypt(base64Reducesize.value);
       }
-      console.log("Selected image URL:", this.car_img_send_add);
     },
     async handleFileChangeEdit(event) {
       const base64 = ref();
       const base64Reducesize = ref();
-      console.log(this.car_imgEdit);
-      console.log(this.car_imgEdit[0].name);
       if (this.car_imgEdit != null) {
         this.carShowimgEdit = URL.createObjectURL(this.car_imgEdit[0]);
         // const hashedURL = this.encrypt(this.car_show);
@@ -522,7 +514,6 @@ export default {
         base64Reducesize.value = await this.reduceSizeBase64(base64.value);
         this.car_img_send_edit = this.encrypt(base64Reducesize.value);
       }
-      console.log("Selected image URL:", this.car_img_send_edit);
     },
 
     convertBase64(file) {
@@ -553,11 +544,8 @@ export default {
           maxImageHeight
         );
         const newSize = this.calc_image_size(resizedBase64);
-        console.log("New Size: ", newSize, "KB");
-        console.log("Old Size: ", oldSize, "KB");
         return resizedBase64;
       } else {
-        console.log("Image already small enough");
         return base64;
       }
     },
@@ -659,7 +647,6 @@ export default {
       this.cidToEdit = id;
     },
     confirmAddCar() {
-      console.log(this.car_img[0]);
       if(carname.value!=''&&description.value !=''&&pricePerday.value !=0&&color.value !=''&&platNumber.value !=''&&this.car_img_send_add !=''&& pricePerday.value>=0&&this.car_img[0]!=null&&selectedCarType.value!=null){
         this.dialogAddcar = false;
         const carData = {
@@ -714,7 +701,6 @@ export default {
         .catch(window.location.reload());
     },
     editCar(id) {
-      console.log("work");
       var myHeaders = new Headers();
       if(carname.value!=''&&description.value !=''&&pricePerday.value !=0&&color.value !=''&&platNumber.value !=''&&this.car_img_send_add !=''&& pricePerday.value>0&&this.car_img_send_edit!=null){
         this.dialogEditcar = false;
@@ -727,8 +713,6 @@ export default {
         image_path: this.car_img_send_edit,
       };
       carTypeId.value = selectedCarType.value;
-      console.log(carTypeId.value.type_id);
-      console.log(id);
       // myHeaders.append("Content-Type", "application/json; charset=UTF-8");
       const requestOptions = {
         method: "PUT",

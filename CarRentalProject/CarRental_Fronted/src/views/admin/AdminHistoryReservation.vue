@@ -165,7 +165,6 @@
     { name: "action", align: "center", field: "reservation_id" },
   ]);
   const decrypt = (encryptedUrl) => {
-    console.log(encryptedUrl);
     const decryptData = CryptoJS.AES.decrypt(encryptedUrl, "123#$%").toString(
       CryptoJS.enc.Utf8
     );
