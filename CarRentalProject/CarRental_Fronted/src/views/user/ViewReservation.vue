@@ -15,6 +15,7 @@
               :filter="filter"
               row-key="reservation_id"
               :rows-per-page-options="[10]"
+              no-data-label="ไม่มีข้อมูลรายการเช่ารถที่กำลังดำเนินการ"
             >
               <template #body-cell-Status="props">
                 <q-td key="Status" :props="props">
