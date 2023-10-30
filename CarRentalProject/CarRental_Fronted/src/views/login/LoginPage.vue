@@ -105,13 +105,24 @@ import router from "../../router";
 const Username = ref(null);
 const Password = ref(null);
 const showAlertDialog = ref(false);
+async function encryptPassword(password) {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return hashHex;
+}
 
 async function login() {
   if (Username.value != null && Password.value != null) {
-
+    console.log(Username.value);
+    console.log(Password.value);
+    let sha256Password = await encryptPassword(Password.value);
     try {
       let result = await axios.get(
-        `http://localhost:8081/Car_rental_backend/users/login?username=${Username.value}&password=${Password.value}`
+        `http://localhost:8081/Car_rental_backend/users/login?username=${Username.value}&password=${sha256Password}`
       );
 
       if (result.status === 200) {
@@ -142,6 +153,7 @@ async function login() {
 function onSubmit() {
   login();
 }
+
 onBeforeMount(() => {
   localStorage.clear();
 });

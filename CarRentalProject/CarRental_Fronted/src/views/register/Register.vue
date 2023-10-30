@@ -116,6 +116,8 @@ export default {
       window.location.reload();
     },
     async onSubmit() {
+      let sha256Password = await this.encryptPassword(this.password);
+      console.log(this.phonenumber);
       if (
         this.username != "" &&
         this.password != "" &&
@@ -128,7 +130,7 @@ export default {
 
         var raw = {
           user_username: this.username,
-          user_password: this.password,
+          user_password: sha256Password,
           user_firstname: this.firstname,
           user_surname: this.surname,
           user_phonenumber: this.phonenumber,
@@ -146,8 +148,17 @@ export default {
           .then((response) => response.json())
           .then((result) => {
             router.push("/register/success");
-          })
+          });
       }
+    },
+    async encryptPassword(password) {
+      const msgBuffer = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hashHex;
     },
   },
 };

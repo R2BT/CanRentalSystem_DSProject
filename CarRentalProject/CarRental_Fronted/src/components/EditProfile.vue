@@ -1,54 +1,54 @@
 <template>
-    <q-dialog v-model="show" persistent>
-      <q-card style="padding: 30px; width: 100%">
-        <q-card-section>
-          <q-card-title
-            class="text-h6 start-container text-center"
-            style="margin-bottom: 0"
-          >
-            <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
-              แก้ไขโปรไฟล์<br />
-            </div>
-          </q-card-title>
-          <q-card-title class="text-h6 start-container" style="margin-bottom: 0">
-            <q-form ref="editForm" @submit="onSubmit" class="q-gutter-md">
-              <q-input v-model="username" label="Username" ref="usernameField" :rules="[(value) => !!value || 'กรุณากรอก Username']" />
-              <q-input
-                v-model="password"
-                label="Password"
-                :type="isPwd ? 'password' : 'text'"
-                ref="passwordField"
-                :rules="[(value) => !!value || 'กรุณากรอก Password']"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="isPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="isPwd = !isPwd"
-                  />
-                </template>
-              </q-input>
-              <q-input v-model="firstname" label="ชื่อจริง" ref="firstnameField" :rules="[(value) => !!value || 'กรุณากรอกชื่อจริง']" />
-              <q-input v-model="surname" label="นามสกุล" ref="surnameField" :rules="[(value) => !!value || 'กรุณากรอกนามสกุล']" />
-              <q-input
-                v-model="phonenumber"
-                label="เบอร์โทรศัพท์"
-                type="number"
-                maxlength=10
-                ref="phonenumberField"
-                :rules="[(value) => !!value || 'กรุณากรอกเบอร์โทรศัพท์']"
+  <q-dialog v-model="show" persistent>
+    <q-card style="padding: 30px; width: 100%">
+      <q-card-section>
+        <q-card-title
+          class="text-h6 start-container text-center"
+          style="margin-bottom: 0"
+        >
+          <div style="font-size: 18px; font-weight: bold; margin-bottom: 30px">
+            แก้ไขข้อมูลส่วนตัว<br />
+          </div>
+        </q-card-title>
+        <q-card-title class="text-h6 start-container" style="margin-bottom: 0">
+          <q-form ref="editForm" @submit="onSubmit" class="q-gutter-md">
+            <h6>Username : {{ username }}</h6>
+            <q-input
+              v-model="firstname"
+              label="ชื่อจริง"
+              ref="firstnameField"
+              :rules="[(value) => !!value || 'กรุณากรอกชื่อจริง']"
+            />
+            <q-input
+              v-model="surname"
+              label="นามสกุล"
+              ref="surnameField"
+              :rules="[(value) => !!value || 'กรุณากรอกนามสกุล']"
+            />
+            <q-input
+              v-model="phonenumber"
+              label="เบอร์โทรศัพท์"
+              type="number"
+              maxlength="10"
+              ref="phonenumberField"
+              :rules="[(value) => !!value || 'กรุณากรอกเบอร์โทรศัพท์']"
+            />
+            <q-card-actions align="center" style="padding-top: 10px">
+              <q-btn label="ยกเลิก" color="negative" @click="cancel" />
+              <q-btn
+                label="ยืนยัน"
+                type="submit"
+                color="positive"
+                @click="onSubmit"
               />
-              <q-card-actions align="center" style="padding-top: 10px">
-                <q-btn label="ยกเลิก" color="negative" @click="cancel" />
-                <q-btn label="ยืนยัน" type="submit" color="positive" @click="onSubmit" />
-              </q-card-actions>
-            </q-form>
-          </q-card-title>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-  </template>
-  
+            </q-card-actions>
+          </q-form>
+        </q-card-title>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+</template>
+
 <script>
 import router from "../router";
 import axios from "axios";
@@ -56,7 +56,6 @@ import { ref } from "vue";
 const userInfoGlo = ref(null);
 export default {
   setup() {
-
     const myItem = localStorage.getItem("user-info");
     const userInfo = JSON.parse(myItem);
     userInfoGlo.value = JSON.parse(myItem);
@@ -74,13 +73,18 @@ export default {
   },
   methods: {
     cancel() {
-
       this.show = false;
       window.location.reload();
-     
     },
     async onSubmit() {
-      if(this.username!=''&&this.password!=''&&this.firstname!=''&&this.surname!=''&&this.phonenumber!=''){
+      console.log(this.phonenumber);
+      if (
+        this.username != "" &&
+        this.password != "" &&
+        this.firstname != "" &&
+        this.surname != "" &&
+        this.phonenumber != ""
+      ) {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json; charset=UTF-8");
         const raw = {
@@ -109,7 +113,7 @@ export default {
           .then((result) => {
             this.comfirmreSaveUser();
           });
-        }
+      }
     },
 
     comfirmreSaveUser() {
@@ -122,13 +126,12 @@ export default {
       );
       localStorage.clear();
       localStorage.setItem("user-info", JSON.stringify(result.data));
-       window.location.reload();
+      window.location.reload();
     },
   },
 };
 </script>
 
-  
 <style scoped>
 body {
   background-color: rgb(234, 234, 234);

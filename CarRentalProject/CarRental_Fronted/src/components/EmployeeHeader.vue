@@ -69,15 +69,42 @@
             <q-item-section> Admin Panel</q-item-section>
           </q-item>
         </router-link>
-        <div class="custom-link" @click="showEditDialog"  v-if="userInfo.user_type !== 'ADMIN'">
-          <q-item clickable v-ripple>
-            <q-item-section avatar>
-              <q-icon name="person" />
-            </q-item-section>
-            <q-item-section> แก้ไขโปรไฟล์ </q-item-section>
-          </q-item>
-          <EditProfile ref="EditProfile" />
-        </div>
+        <q-expansion-item icon="person" label="แก้ไขโพร์ไฟล์">
+          <q-card class="bg-grey-9">
+            <q-card-section>
+              <div
+                class="custom-link"
+                style="margin-bottom: 10px"
+                @click="showEditDialog"
+                v-if="userInfo.user_type !== 'ADMIN'"
+              >
+                <q-item clickable v-ripple>
+                  <q-item-section avatar>
+                    <q-icon name="edit" />
+                  </q-item-section>
+                  <q-item-section> แก้ไขข้อมูลส่วนตัว</q-item-section>
+                </q-item>
+                <EditProfile ref="EditProfile" />
+              </div>
+
+              <div
+                class="custom-link"
+                @click="showChangePasswordDialog"
+                v-if="userInfo.user_type !== 'ADMIN'"
+              >
+                <q-item clickable v-ripple>
+                  <q-item-section avatar>
+                    <q-icon name="key" />
+                  </q-item-section>
+                  <q-item-section> เปลี่ยนรหัสผ่าน</q-item-section>
+                </q-item>
+
+                <ChangePassword ref="ChangePassword"></ChangePassword>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
         <div class="custom-link" @click="showLogoutDialog">
           <q-item clickable v-ripple>
             <q-item-section avatar>
@@ -118,10 +145,10 @@
           <img src="../assets/image/man.png" />
         </q-avatar>
         <div>
-          <div  v-if="userInfo.user_type !== 'ADMIN'">ข้อมูลผู้เช่า</div>
+          <div v-if="userInfo.user_type !== 'ADMIN'">ข้อมูลผู้เช่า</div>
           <div v-else>{{ userInfo.user_type }}</div>
         </div>
-        <div class="text-weight-bold"  v-if="userInfo.user_type !== 'ADMIN'">
+        <div class="text-weight-bold" v-if="userInfo.user_type !== 'ADMIN'">
           {{ userInfo.user_firstname }} {{ userInfo.user_surname }}
         </div>
         <div>
@@ -132,17 +159,18 @@
       </div>
     </q-img>
   </q-drawer>
-  
 </template>
 
 <script>
 import { ref } from "vue";
 import LogoutDialog from "../components/LogoutDialog.vue";
 import EditProfile from "../components/EditProfile.vue";
+import ChangePassword from "../components/ChangePassword.vue";
 export default {
   components: {
     LogoutDialog,
-    EditProfile
+    EditProfile,
+    ChangePassword,
   },
   methods: {
     showLogoutDialog() {
@@ -151,9 +179,11 @@ export default {
     showEditDialog() {
       this.$refs.EditProfile.show = true;
     },
+    showChangePasswordDialog() {
+      this.$refs.ChangePassword.showChangePassword = true;
+    },
   },
   setup() {
-    
     const rightDrawerOpen = ref(false);
     // Check if the item exists in localStorage
     const myItem = localStorage.getItem("user-info");
