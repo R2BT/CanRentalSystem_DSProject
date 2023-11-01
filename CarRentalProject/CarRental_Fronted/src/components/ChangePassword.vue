@@ -35,7 +35,11 @@
               label="รหัสผ่านใหม่"
               :type="isPwd ? 'password' : 'text'"
               ref="passwordField"
-              :rules="[(value) => !!value || 'กรุณากรอก Password']"
+              :rules="[
+                (value) =>
+                  validatePassword(value) ||
+                  'กรุณากรอกรหัสผ่านที่ถูกต้อง 1 ตัวอักษรพิเศษ 1 ตัวพิมพ์เล็ก 1 ตัวพิมพ์ใหญ่ และมีความยาวมากกว่า8ตัวอักษร',
+              ]"
             >
               <template v-slot:append>
                 <q-icon
@@ -148,6 +152,11 @@ export default {
     };
   },
   methods: {
+    validatePassword(password) {
+      const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return regex.test(password);
+    },
     async encryptPassword(password) {
       const msgBuffer = new TextEncoder().encode(password);
       const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);

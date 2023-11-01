@@ -17,13 +17,20 @@
               v-model="firstname"
               label="ชื่อจริง"
               ref="firstnameField"
-              :rules="[(value) => !!value || 'กรุณากรอกชื่อจริง']"
+              :rules="[
+                (value) =>
+                  validateName(value) || 'กรุณากรอกชื่อที่มีตัวอักษรเท่านั้น',
+              ]"
             />
             <q-input
               v-model="surname"
               label="นามสกุล"
               ref="surnameField"
-              :rules="[(value) => !!value || 'กรุณากรอกนามสกุล']"
+              :rules="[
+                (value) =>
+                  validateName(value) ||
+                  'กรุณากรอกนามสกุลที่มีตัวอักษรเท่านั้น',
+              ]"
             />
             <q-input
               v-model="phonenumber"
@@ -31,7 +38,11 @@
               type="number"
               maxlength="10"
               ref="phonenumberField"
-              :rules="[(value) => !!value || 'กรุณากรอกเบอร์โทรศัพท์']"
+              :rules="[
+                (value) =>
+                  validatePhoneNumber(value) ||
+                  'กรุณากรอกเบอร์โทรศัพท์ที่ถูกต้อง',
+              ]"
             />
             <q-card-actions align="center" style="padding-top: 10px">
               <q-btn label="ยกเลิก" color="negative" @click="cancel" />
@@ -72,6 +83,14 @@ export default {
     };
   },
   methods: {
+    validatePhoneNumber(number) {
+      const regex = /^[0-9]{10}$/;
+      return regex.test(number);
+    },
+    validateName(name) {
+      const regex = /^[A-Za-zก-๙]+$/;
+      return regex.test(name);
+    },
     cancel() {
       this.show = false;
       window.location.reload();

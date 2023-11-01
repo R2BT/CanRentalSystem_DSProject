@@ -38,7 +38,11 @@
                 filled
                 type="password"
                 label="Password"
-                :rules="[(value) => !!value || 'กรุณากรอก Password']"
+                :rules="[
+                  (value) =>
+                    validatePassword(value) ||
+                    'กรุณากรอกรหัสผ่านที่ถูกต้อง 1 ตัวอักษรพิเศษ 1 ตัวพิมพ์เล็ก 1 ตัวพิมพ์ใหญ่ และมีความยาวมากกว่า8ตัวอักษร',
+                ]"
               />
             </div>
             <div class="col-margin">
@@ -49,7 +53,10 @@
                 filled
                 label="ชื่อจริง"
                 ref="firstnameField"
-                :rules="[(value) => !!value || 'กรุณากรอกชื่อจริง']"
+                :rules="[
+                  (value) =>
+                    validateName(value) || 'กรุณากรอกชื่อที่มีตัวอักษรเท่านั้น',
+                ]"
               />
             </div>
             <div class="col-margin">
@@ -60,7 +67,11 @@
                 v-model="surname"
                 label="นามสกุล"
                 ref="surnameField"
-                :rules="[(value) => !!value || 'กรุณากรอกนามสกุล']"
+                :rules="[
+                  (value) =>
+                    validateName(value) ||
+                    'กรุณากรอกนามสกุลที่มีตัวอักษรเท่านั้น',
+                ]"
               />
             </div>
             <div class="col-margin">
@@ -73,7 +84,11 @@
                 type="number"
                 maxlength="10"
                 ref="phonenumberField"
-                :rules="[(value) => !!value || 'กรุณากรอกเบอร์โทรศัพท์']"
+                :rules="[
+                  (value) =>
+                    validatePhoneNumber(value) ||
+                    'กรุณากรอกเบอร์โทรศัพท์ที่ถูกต้อง',
+                ]"
               />
             </div>
             <div class="col-margin">
@@ -111,6 +126,19 @@ export default {
     };
   },
   methods: {
+    validatePhoneNumber(number) {
+      const regex = /^[0-9]{10}$/;
+      return regex.test(number);
+    },
+    validateName(name) {
+      const regex = /^[A-Za-zก-๙]+$/;
+      return regex.test(name);
+    },
+    validatePassword(password) {
+      const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return regex.test(password);
+    },
     cancel() {
       this.show = false;
       window.location.reload();

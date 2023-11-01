@@ -16,7 +16,7 @@
   </q-toolbar>
 
   <q-carousel
-    style="height: 92vh"
+    style="height: 100vh"
     animated
     v-model="slide"
     navigation
@@ -30,39 +30,22 @@
   >
     <q-carousel-slide :name="1" img-src="../../assets/image/background.jpg">
       <div class="absolute-bottom custom-caption">
-        <div class="textCenter">
-          Car Rental System Management <br />เว็ปไซต์สำหรับให้บริการเช่ารถยนต์
-        </div>
+        <div class="textCenter">รถยนต์หลากหลายพร้อมให้บริการ</div>
       </div></q-carousel-slide
     >
-    <q-carousel-slide
-      :name="2"
-      img-src="https://cdn.quasar.dev/img/parallax1.jpg"
-    >
+    <q-carousel-slide :name="2" img-src="../../assets/image/guest/allCar.jpg">
       <div class="absolute-bottom custom-caption">
-        <div class="textCenter">
-          Car Rental System Management <br />เว็ปไซต์สำหรับให้บริการเช่ารถยนต์
-        </div>
+        <div class="textCenter">ขับขี่ปลอดภัย</div>
       </div></q-carousel-slide
     >
-    <q-carousel-slide
-      :name="3"
-      img-src="https://cdn.quasar.dev/img/parallax1.jpg"
-    >
+    <q-carousel-slide :name="3" img-src="../../assets/image/guest/rent.jpg">
       <div class="absolute-bottom custom-caption">
-        <div class="textCenter">
-          Car Rental System Management <br />เว็ปไซต์สำหรับให้บริการเช่ารถยนต์
-        </div>
+        <div class="textCenter">ส่งรถถึงมือ</div>
       </div></q-carousel-slide
     >
-    <q-carousel-slide
-      :name="4"
-      img-src="https://cdn.quasar.dev/img/parallax1.jpg"
-    >
+    <q-carousel-slide :name="4" img-src="../../assets/image/guest/check.jpg">
       <div class="absolute-bottom custom-caption">
-        <div class="textCenter">
-          Car Rental System Management <br />เว็ปไซต์สำหรับให้บริการเช่ารถยนต์
-        </div>
+        <div class="textCenter">มีการตรวจเช็คสภาพทุกครั้งก่อนให้บริการ</div>
       </div></q-carousel-slide
     >
   </q-carousel>
@@ -146,7 +129,7 @@ export default {
 }
 .textCenter {
   color: white;
-  font-size: 3vh;
+  font-size: 8vh;
   margin-bottom: 35vh;
 }
 
