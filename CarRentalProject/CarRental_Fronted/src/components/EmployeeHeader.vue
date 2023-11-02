@@ -69,7 +69,7 @@
             <q-item-section> Admin Panel</q-item-section>
           </q-item>
         </router-link>
-        <q-expansion-item icon="person" label="แก้ไขโพร์ไฟล์">
+        <q-expansion-item icon="person" label="แก้ไขโพร์ไฟล์" v-if="userInfo.user_type === 'USER'">
           <q-card class="bg-grey-9">
             <q-card-section>
               <div

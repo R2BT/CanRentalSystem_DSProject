@@ -16,7 +16,7 @@
   </q-toolbar>
 
   <q-carousel
-    style="height: 100vh"
+    style="height: 40vh"
     animated
     v-model="slide"
     navigation

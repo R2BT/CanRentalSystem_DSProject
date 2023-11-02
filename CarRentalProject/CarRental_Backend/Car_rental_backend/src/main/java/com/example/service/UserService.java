@@ -36,4 +36,8 @@ public class UserService {
 	public Users getByUserAndPass(String username, String password) {
         return userRepository.findByUserAndPass(username, password);
     }
+	
+	public Users getByUserAndInfo(String username, String firstname,String lastname,String phone) {
+        return userRepository.findByUserAndInfo(username, firstname,lastname,phone);
+    }
 }

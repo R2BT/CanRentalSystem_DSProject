@@ -79,5 +79,13 @@ public class UserController {
 		}
 		return new ResponseEntity<Users>(user, HttpStatus.OK);
 	}
-
+	
+	@GetMapping("/checktochangepass")
+	public ResponseEntity<Users> getUserByUserAndInfo(@Parameter(name="username")String username,@Parameter(name="firstname")String firstname,@Parameter(name="lastname")String lastname,@Parameter(name="phone")String phone) {
+		Users user = userService.getByUserAndInfo(username, firstname,lastname,phone);
+		if(user == null) {
+			return new ResponseEntity<Users>(user, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Users>(user, HttpStatus.OK);
+	}
 }
