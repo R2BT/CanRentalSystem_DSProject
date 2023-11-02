@@ -40,4 +40,16 @@ public class UserService {
 	public Users getByUserAndInfo(String username, String firstname,String lastname,String phone) {
         return userRepository.findByUserAndInfo(username, firstname,lastname,phone);
     }
+	
+	 public boolean isUsernameExists(String username) {
+		 Users existingUser = userRepository.findByName(username);
+		    if (existingUser != null) {
+		        System.out.print("Username exists: " + existingUser.getUser_username() + "\n");
+		        return true;
+		    } else {
+		        System.out.print("Username does not exist.\n");
+		        return false;
+		    }
+
+	    }
 }
