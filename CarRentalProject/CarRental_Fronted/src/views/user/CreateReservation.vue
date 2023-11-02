@@ -75,45 +75,47 @@
                 no-data-label="กรุณาเลือกวันที่เริ่มเช่าและวันที่สิ้นสุดการเช่า"
               >
                 <template #body-cell-Carimage="props">
-                  <div style="margin-top:30px;">
-                  <img
-                    v-if="props.row.image_path"
-                    :src="props.row.image_path"
-                    alt="Car Image"
-                    style="
-                      width: 160px;
-                      height: 120px;
-                      display: block;
-                      margin: 0 auto;
-                    "
-                  /></div>
+                  <div style="margin-top: 30px">
+                    <img
+                      v-if="props.row.image_path"
+                      :src="props.row.image_path"
+                      alt="Car Image"
+                      style="
+                        width: 160px;
+                        height: 120px;
+                        display: block;
+                        margin: 0 auto;
+                      "
+                    />
+                  </div>
                 </template>
                 <template #body-cell-action="props">
-                  <div style="margin-right:37%;">
-                  <q-btn
-                    label="เช่า"
-                    color="orange"
-                    style="
-                      width: 100px;
-                      height: 20px;
-                      margin-right: 20px;
-                      margin-top: 5px;
-                      margin-left: 30%;
-                      
-                      margin-bottom: 20px;
-                    "
-                    @click="
-                      rentCarAlert(
-                        props.row.car_id,
-                        props.row.car_name,
-                        props.row.plat_number,
-                        props.row.car_type.type_model,
-                        props.row.price_per_day,
-                        props.row.image_path
-                      )
-                    "
-                  /></div>
-                  
+                  <div style="margin-right: 37%">
+                    <q-btn
+                      label="เช่า"
+                      color="orange"
+                      style="
+                        width: 100px;
+                        height: 20px;
+                        margin-right: 20px;
+                        margin-top: 5px;
+                        margin-left: 30%;
+
+                        margin-bottom: 20px;
+                      "
+                      @click="
+                        rentCarAlert(
+                          props.row.car_id,
+                          props.row.car_name,
+                          props.row.plat_number,
+                          props.row.car_type.type_model,
+                          props.row.price_per_day,
+                          props.row.image_path
+                        )
+                      "
+                    />
+                  </div>
+
                   <q-dialog v-model="dialog" persistent>
                     <q-card style="padding: 30px">
                       <q-card-section>
@@ -152,7 +154,7 @@
                             {{ platNumberInfo }}<br />
                             วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า:
                             {{ rentStartdate }} - {{ rentEnddate }}<br />
-                            ราคาเช่า/วัน: {{  priceRentperday }} บาท<br />
+                            ราคาเช่า/วัน: {{ priceRentperday }} บาท<br />
                             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
                             ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
                           </div>
@@ -186,14 +188,14 @@
                       <q-card-section style="width: 500px; height: 50px">
                         <q-card-main>
                           ขออภัยในความไม่สะดวกเนื่องจากไม่มีรถที่พร้อมให้บริการเช่าในวันที่ระบุ
-                          กรุณาเลือกวันที่ใหม่อีกครั้ง 
+                          กรุณาเลือกวันที่ใหม่อีกครั้ง
                         </q-card-main>
                       </q-card-section>
                       <q-card-actions align="right">
                         <q-btn
                           label="ยืนยัน"
                           color="negative"
-                          @click= "notFoundcar = true"
+                          @click="notFoundcar = true"
                         />
                       </q-card-actions>
                     </q-card>
@@ -265,7 +267,7 @@ export default {
       this.nameCarInfo = `ชื่อรถ: ${name}`;
       this.typeCarInfo = `ประเภท: ${type}`;
       this.platNumberInfo = `หมายเลขทะเบียน: ${platNumber}`;
-      this.pricePerdaysend =  pricePerDay;
+      this.pricePerdaysend = pricePerDay;
       this.dialog = true;
       this.actionColor = "negative";
       this.carShowimg = img;
@@ -337,7 +339,9 @@ export default {
               });
               rows.value = decryptedRows;
               if (decryptedRows.length === 0) {
-                alert(" ขออภัยในความไม่สะดวกเนื่องจากไม่มีรถที่พร้อมให้บริการเช่าในวันที่ระบุ กรุณาเลือกวันที่ใหม่อีกครั้ง");
+                alert(
+                  " ขออภัยในความไม่สะดวกเนื่องจากไม่มีรถที่พร้อมให้บริการเช่าในวันที่ระบุ กรุณาเลือกวันที่ใหม่อีกครั้ง"
+                );
               }
             });
         } catch (error) {
@@ -428,7 +432,7 @@ export default {
         start_date: formattedStartDate,
         end_date: formattedEndDate,
         cost_per_day: pricePerdaysend.value,
-        status: "จองเช่ารถล่วงหน้า"
+        status: "จองเช่ารถล่วงหน้า",
       });
 
       var requestOptions = {
@@ -484,7 +488,7 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "customfont";
 }
 body {
   background-image: url("../../assets/image/background3.svg");

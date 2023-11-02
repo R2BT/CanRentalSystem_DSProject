@@ -5,7 +5,7 @@
       <q-page-container>
         <div class="background">
           <div class="background-container">
-            <div class="block-background" style="width: 40%;">
+            <div class="block-background" style="width: 40%">
               <h6>Car Rental System Management</h6>
               <h3>Admin Panel</h3>
             </div>
@@ -82,13 +82,19 @@ export default {
     const myItem = localStorage.getItem("user-info");
     const userInfo = JSON.parse(myItem);
     return {
-      userInfo
+      userInfo,
     };
   },
 };
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "customfont";
+}
 .background {
   background-image: url("../../assets/image/background4.svg");
   background-size: cover;
@@ -186,10 +192,10 @@ h6 {
   height: 7rem;
 }
 .custom-btn {
-  background-color: #212A3E; 
-  color: white; 
+  background-color: #212a3e;
+  color: white;
 }
-.text2{
+.text2 {
   display: flex;
   justify-content: start;
   align-items: start;
@@ -199,13 +205,13 @@ h6 {
   color: black;
   font-weight: bold;
 }
-.text3{
+.text3 {
   display: flex;
   justify-content: start;
   align-items: start;
   padding-top: 1rem;
   padding-left: 1rem;
   margin: 0rem;
-  color: #7B7B7B;
+  color: #7b7b7b;
 }
 </style>

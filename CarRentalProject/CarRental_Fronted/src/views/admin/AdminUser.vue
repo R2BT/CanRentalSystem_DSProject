@@ -128,11 +128,12 @@ const columns = ref([
 const fetchData = () => {
   UserService.getUser().then((response) => {
     // Filter out rows where user_type is 'ADMIN'
-    const filteredRows = response.data.filter((row) => row.user_type !== 'ADMIN');
+    const filteredRows = response.data.filter(
+      (row) => row.user_type !== "ADMIN"
+    );
     rows.value = filteredRows;
   });
 };
-
 
 export default {
   setup() {
@@ -186,10 +187,13 @@ export default {
         redirect: "follow",
       };
 
-      fetch("http://localhost:8081/Car_rental_backend/users/" + id, requestOptions)
+      fetch(
+        "http://localhost:8081/Car_rental_backend/users/" + id,
+        requestOptions
+      )
         .then((response) => response.json())
         .then((result) => {
-            window.location.reload()
+          window.location.reload();
         })
         .catch(window.location.reload());
     },
@@ -203,6 +207,12 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "customfont";
+}
 body {
   background-color: rgb(234, 234, 234);
   margin: 0;

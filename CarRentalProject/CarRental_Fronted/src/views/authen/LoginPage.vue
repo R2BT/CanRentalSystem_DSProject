@@ -23,7 +23,7 @@
               style="margin: 15px; height: 150px; width: 150px"
             />
           </div>
-          
+
           <h4 class="textDone">Car Rental System Management</h4>
           <q-form @submit="onSubmit" ref="form">
             <div class="col-margin">
@@ -48,8 +48,8 @@
               />
             </div>
             <router-link :to="{ name: 'changepassword' }" class="custom-link">
-            <h6 class="forgetPass">ลืมรหัสผ่าน?</h6>
-          </router-link>
+              <h6 class="forgetPass">ลืมรหัสผ่าน?</h6>
+            </router-link>
             <div class="col-margin">
               <q-btn
                 unelevated
@@ -142,7 +142,6 @@ async function login() {
           router.push("/rentcar");
         }
       } else if (result.status === 404) {
-        
         // Handle 404 (Not Found)
         showAlertDialog.value = true;
         alert("User not found");
@@ -169,7 +168,7 @@ onBeforeMount(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "customfont";
 }
 body {
   background-image: url("../../assets/image/background.jpg");

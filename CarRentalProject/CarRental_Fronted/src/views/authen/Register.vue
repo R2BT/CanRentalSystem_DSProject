@@ -197,7 +197,7 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "customfont";
 }
 body {
   background-image: url("../../assets/image/background.jpg");

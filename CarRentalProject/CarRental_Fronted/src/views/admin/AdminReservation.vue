@@ -50,14 +50,14 @@
             :filter="filter"
             no-data-label="ไม่มีข้อมูลรายการเช่ารถที่รอดำเนินการ"
           >
-          <template #body-cell-Status="props">
-                <q-td key="Status" :props="props">
-                  <q-badge
-                    :color="getStatusColor(props.row.status)"
-                    :label="props.row.status"
-                  />
-                </q-td>
-              </template>
+            <template #body-cell-Status="props">
+              <q-td key="Status" :props="props">
+                <q-badge
+                  :color="getStatusColor(props.row.status)"
+                  :label="props.row.status"
+                />
+              </q-td>
+            </template>
             <template #body-cell-Carimage="props">
               <img
                 v-if="props.row.image_path"
@@ -294,19 +294,19 @@
           </div>
         </q-card-title>
         <q-card-title class="text-h6 close-container" style="margin-bottom: 0">
-          <div style="font-size: 13px; color: blue; margin-right: 20px;">
+          <div style="font-size: 13px; color: blue; margin-right: 20px">
             *เมื่อกดยืนยันรายการนี้เปลี่ยนสถานะการจองเป็นอยู่ในระหว่างการเช่ารถ*
           </div>
           <div style="font-size: 13px; color: red"></div>
         </q-card-title>
       </q-card-section>
       <q-card-actions align="center" style="padding-top: 10px">
-        <q-btn label="ยกเลิก" color="negative" @click="dialogChangeStatus = false" />
         <q-btn
-          label="ยืนยัน"
-          color="positive"
-          @click="confirmChangeStatus"
+          label="ยกเลิก"
+          color="negative"
+          @click="dialogChangeStatus = false"
         />
+        <q-btn label="ยืนยัน" color="positive" @click="confirmChangeStatus" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -535,12 +535,13 @@ export default {
       this.totalcost = price;
       this.priceperday = priceperday;
       this.imgpath = this.encrypt(img);
-      this.pricePerday =   priceperday;
+      this.pricePerday = priceperday;
       this.statusCheck = status;
     },
     changeStatusAlert(
       id,
-      uid,cid,
+      uid,
+      cid,
       firstname,
       lastname,
       phonenumber,
@@ -581,11 +582,11 @@ export default {
       this.startDate = startDate;
       this.endDate = endDate;
       this.totalcost = price;
-      this.pricePerday =  priceperday;
+      this.pricePerday = priceperday;
       this.priceperday = priceperday;
       this.imgpath = this.encrypt(img);
       this.statusCheck = status;
-      this.uid= uid;
+      this.uid = uid;
       this.cid = cid;
     },
     reservationAlert(
@@ -620,7 +621,7 @@ export default {
       this.carShowimgDelete = img;
       this.actionColor = "negative";
       this.ridToDelete = id;
-      this.pricePerday =  priceperday;
+      this.pricePerday = priceperday;
       this.statusCheck = status;
     },
     deleteReservation(id) {
@@ -708,7 +709,7 @@ export default {
           this.deleteReservation(id);
         });
     },
-    changeStatus(id,uid,cid) {
+    changeStatus(id, uid, cid) {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json; charset=UTF-8");
 
@@ -728,7 +729,12 @@ export default {
       };
 
       fetch(
-        "http://localhost:8081/Car_rental_backend/reservations/" + id +"/user/" + uid+ "/car/" + cid,
+        "http://localhost:8081/Car_rental_backend/reservations/" +
+          id +
+          "/user/" +
+          uid +
+          "/car/" +
+          cid,
         requestOptions
       )
         .then((response) => response.json())
@@ -742,23 +748,23 @@ export default {
       this.deleteReservation(this.ridToDelete);
     },
     confirmHistoryReservation() {
-      if(this.statusCheck=="จองเช่ารถล่วงหน้า"){
-        alert("สถานะของรายการนี้อยู่ในการจองเช่ารถล่วงหน้า ไม่สามารถสิ้นสุดรายการเช่านี้ได้");
+      if (this.statusCheck == "จองเช่ารถล่วงหน้า") {
+        alert(
+          "สถานะของรายการนี้อยู่ในการจองเช่ารถล่วงหน้า ไม่สามารถสิ้นสุดรายการเช่านี้ได้"
+        );
         return;
-      }
-      else{
-      this.dialogHistory = false;
-      this.saveHistoryReservation(this.ridToDelete);
+      } else {
+        this.dialogHistory = false;
+        this.saveHistoryReservation(this.ridToDelete);
       }
     },
     confirmChangeStatus() {
-      if(this.statusCheck=="อยู่ในระหว่างดำเนินการเช่ารถ"){
+      if (this.statusCheck == "อยู่ในระหว่างดำเนินการเช่ารถ") {
         alert("สถานะของรายการนี้อยู่ในระหว่างดำเนินการเช่ารถอยู่แล้ว");
         return;
-      }
-      else{
-      this.dialogChangeStatus = false;
-      this.changeStatus(this.ridToDelete,this.uid,this.cid);
+      } else {
+        this.dialogChangeStatus = false;
+        this.changeStatus(this.ridToDelete, this.uid, this.cid);
       }
     },
   },
@@ -766,6 +772,12 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "customfont";
+}
 body {
   background-color: rgb(234, 234, 234);
   margin: 0;

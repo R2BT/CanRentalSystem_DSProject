@@ -152,6 +152,12 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "customfont";
+}
 body {
   background-color: rgb(234, 234, 234);
   margin: 0;

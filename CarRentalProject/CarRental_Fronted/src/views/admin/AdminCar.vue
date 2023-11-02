@@ -647,34 +647,44 @@ export default {
       this.cidToEdit = id;
     },
     confirmAddCar() {
-      if(carname.value!=''&&description.value !=''&&pricePerday.value !=0&&color.value !=''&&platNumber.value !=''&&this.car_img_send_add !=''&& pricePerday.value>=0&&this.car_img[0]!=null&&selectedCarType.value!=null){
+      if (
+        carname.value != "" &&
+        description.value != "" &&
+        pricePerday.value != 0 &&
+        color.value != "" &&
+        platNumber.value != "" &&
+        this.car_img_send_add != "" &&
+        pricePerday.value >= 0 &&
+        this.car_img[0] != null &&
+        selectedCarType.value != null
+      ) {
         this.dialogAddcar = false;
         const carData = {
-        car_name: carname.value,
-        description: description.value,
-        price_per_day: pricePerday.value,
-        color: color.value,
-        plat_number: platNumber.value,
-        image_path: this.car_img_send_add,
-      };
-      carTypeId.value = selectedCarType.value;
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-        body: JSON.stringify(carData),
-      };
+          car_name: carname.value,
+          description: description.value,
+          price_per_day: pricePerday.value,
+          color: color.value,
+          plat_number: platNumber.value,
+          image_path: this.car_img_send_add,
+        };
+        carTypeId.value = selectedCarType.value;
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify(carData),
+        };
 
-      fetch(
-        `http://localhost:8081/Car_rental_backend/cars/` +
-          carTypeId.value.type_id,
-        requestOptions
-      )
-        .then((response) => response.text())
-        .then((result) => {})
-        .catch();
-    }
+        fetch(
+          `http://localhost:8081/Car_rental_backend/cars/` +
+            carTypeId.value.type_id,
+          requestOptions
+        )
+          .then((response) => response.text())
+          .then((result) => {})
+          .catch();
+      }
     },
     deleteCar(id) {
       var myHeaders = new Headers();
@@ -702,38 +712,47 @@ export default {
     },
     editCar(id) {
       var myHeaders = new Headers();
-      if(carname.value!=''&&description.value !=''&&pricePerday.value !=0&&color.value !=''&&platNumber.value !=''&&this.car_img_send_add !=''&& pricePerday.value>0&&this.car_img_send_edit!=null){
+      if (
+        carname.value != "" &&
+        description.value != "" &&
+        pricePerday.value != 0 &&
+        color.value != "" &&
+        platNumber.value != "" &&
+        this.car_img_send_add != "" &&
+        pricePerday.value > 0 &&
+        this.car_img_send_edit != null
+      ) {
         this.dialogEditcar = false;
         const carData = {
-        car_name: carname.value,
-        description: description.value,
-        price_per_day: pricePerday.value,
-        color: color.value,
-        plat_number: platNumber.value,
-        image_path: this.car_img_send_edit,
-      };
-      carTypeId.value = selectedCarType.value;
-      // myHeaders.append("Content-Type", "application/json; charset=UTF-8");
-      const requestOptions = {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-        body: JSON.stringify(carData),
-      };
+          car_name: carname.value,
+          description: description.value,
+          price_per_day: pricePerday.value,
+          color: color.value,
+          plat_number: platNumber.value,
+          image_path: this.car_img_send_edit,
+        };
+        carTypeId.value = selectedCarType.value;
+        // myHeaders.append("Content-Type", "application/json; charset=UTF-8");
+        const requestOptions = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify(carData),
+        };
 
-      fetch(
-        "http://localhost:8081/Car_rental_backend/cars/" +
-          id +
-          "/type/" +
-          carTypeId.value.type_id,
-        requestOptions
-      )
-        .then((response) => response.text())
-        .then((result) => {
-          window.location.reload();
-        })
-        .catch((error) => console.log("error", error));
+        fetch(
+          "http://localhost:8081/Car_rental_backend/cars/" +
+            id +
+            "/type/" +
+            carTypeId.value.type_id,
+          requestOptions
+        )
+          .then((response) => response.text())
+          .then((result) => {
+            window.location.reload();
+          })
+          .catch((error) => console.log("error", error));
       }
     },
     confirmDeleteCar() {
@@ -753,7 +772,12 @@ body {
   margin: 0;
   height: 100vh;
 }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "customfont";
+}
 .background {
   background-image: url("../../assets/image/background.jpg");
   background-size: cover;

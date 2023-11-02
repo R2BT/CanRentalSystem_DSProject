@@ -69,7 +69,11 @@
             <q-item-section> Admin Panel</q-item-section>
           </q-item>
         </router-link>
-        <q-expansion-item icon="person" label="แก้ไขโพร์ไฟล์" v-if="userInfo.user_type === 'USER'">
+        <q-expansion-item
+          icon="person"
+          label="แก้ไขโพร์ไฟล์"
+          v-if="userInfo.user_type === 'USER'"
+        >
           <q-card class="bg-grey-9">
             <q-card-section>
               <div
@@ -200,6 +204,12 @@ export default {
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "customfont";
+}
 .custom-navbar {
   background-color: #181818;
   color: white;

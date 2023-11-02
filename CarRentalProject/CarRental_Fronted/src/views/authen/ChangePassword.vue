@@ -130,8 +130,7 @@ export default {
       firstname: ref(null),
       surname: ref(null),
       phonenumber: ref(null),
- showAlertDialog 
-
+      showAlertDialog,
     };
   },
   methods: {
@@ -148,14 +147,19 @@ export default {
       window.location.reload();
     },
     async onSubmit() {
-      if (this.username != null&&this.firstname!=null &&this.surname!=null&&this.phonenumber!=null ) {
+      if (
+        this.username != null &&
+        this.firstname != null &&
+        this.surname != null &&
+        this.phonenumber != null
+      ) {
         try {
           let result = await axios.get(
             `http://localhost:8081/Car_rental_backend/users/checktochangepass?username=${this.username}&firstname=${this.firstname}&lastname=${this.surname}&phone=${this.phonenumber}`
           );
           if (result.status === 200) {
             localStorage.clear();
-          localStorage.setItem("user-info", JSON.stringify(result.data));
+            localStorage.setItem("user-info", JSON.stringify(result.data));
             router.push("/register/changepassword/comfirm");
           } else if (result.status === 404) {
             // console.log("False");
@@ -186,7 +190,7 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "customfont";
 }
 body {
   background-image: url("../../assets/image/background.jpg");
