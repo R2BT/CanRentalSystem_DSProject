@@ -103,6 +103,26 @@
               />
             </div>
           </q-form>
+          <q-dialog v-model="showAlertDialog">
+            <q-card
+              style="
+                width: 400px;
+                padding: 10px;
+                background-color: red;
+                color: white;
+              "
+            >
+              <q-card-section>
+                <div class="text-h6">Alert</div>
+              </q-card-section>
+              <q-card-section class="q-pt-none">
+                The username has already exists.
+              </q-card-section>
+              <q-card-actions align="right">
+                <q-btn flat label="OK" color="white" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
         </div>
       </div>
     </q-page-container>
@@ -113,6 +133,7 @@
 import axios from "axios";
 import { ref } from "vue";
 import router from "../../router";
+const showAlertDialog = ref(false);
 export default {
   setup() {
     localStorage.clear();
@@ -123,6 +144,7 @@ export default {
       surname: ref(null),
       phonenumber: ref(null),
       isPwd: ref(true),
+      showAlertDialog
     };
   },
   methods: {
@@ -173,10 +195,15 @@ export default {
         };
 
         fetch("http://localhost:8081/Car_rental_backend/users", requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            router.push("/register/success");
-          });
+  .then((response) => response.json())
+  .then((result) => {
+    router.push("/register/success");
+  })
+  .catch((error) => {
+    showAlertDialog.value = true;
+  });
+
+       
       }
     },
     async encryptPassword(password) {
