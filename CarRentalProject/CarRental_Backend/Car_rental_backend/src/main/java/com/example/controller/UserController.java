@@ -53,6 +53,9 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<Users> createUser(@RequestBody Users user) {
+		if (userService.isUsernameExists(user.getUser_username())) {
+	        return new ResponseEntity<>(HttpStatus.CONFLICT);
+	    }
 		Users createdUser = userService.createUser(user);
 		return new ResponseEntity<Users>(createdUser, HttpStatus.CREATED);
 	}
@@ -79,6 +82,7 @@ public class UserController {
 		}
 		return new ResponseEntity<Users>(user, HttpStatus.OK);
 	}
+	
 	
 	@GetMapping("/checktochangepass")
 	public ResponseEntity<Users> getUserByUserAndInfo(@Parameter(name="username")String username,@Parameter(name="firstname")String firstname,@Parameter(name="lastname")String lastname,@Parameter(name="phone")String phone) {
