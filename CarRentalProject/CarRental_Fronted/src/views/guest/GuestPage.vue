@@ -16,7 +16,7 @@
   </q-toolbar>
 
   <q-carousel
-    style="height: 100vh"
+    style="height: 40vh"
     animated
     v-model="slide"
     navigation
@@ -49,50 +49,47 @@
       </div></q-carousel-slide
     >
   </q-carousel>
+
   <div class="body">
     <div class="textHeader">ABOUT US</div>
   </div>
 
   <div class="row">
-    <div class="col">
-      <q-card class="my-card">
-        <img src="../../assets/image/petch.jpg" />
-        <q-card-section>
-          <div class="text-h6">Pattrapol Jamjumrus</div>
-          <div class="text-subtitle2">Front-End Developer</div>
-        </q-card-section>
+    <q-card class="my-card">
+      <img src="../../assets/image/petch.jpg" />
+      <q-card-section>
+        <div class="text-h6">Pattrapol Jamjumrus</div>
+        <div class="text-subtitle2">Front-End Developer</div>
+      </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          {{ lorem }}
-        </q-card-section>
-      </q-card>
-    </div>
-    <div class="col">
-      <q-card class="my-card">
-        <img src="../../assets/image/top2.jpg" />
-        <q-card-section>
-          <div class="text-h6">Theerphat Aksaranan</div>
-          <div class="text-subtitle2">Full-Stack Developer</div>
-        </q-card-section>
+      <q-card-section class="q-pt-none">
+        {{ lorem }}
+      </q-card-section>
+    </q-card>
 
-        <q-card-section class="q-pt-none">
-          {{ lorem }}
-        </q-card-section>
-      </q-card>
-    </div>
-    <div class="col">
-      <q-card class="my-card">
-        <img src="../../assets/image/tam2.jpg" />
-        <q-card-section>
-          <div class="text-h6">Nared Fuengverojsakul</div>
-          <div class="text-subtitle2">Back-End Developer</div>
-        </q-card-section>
+    <q-card class="my-card">
+      <img src="../../assets/image/top2.jpg" />
+      <q-card-section>
+        <div class="text-h6">Theerphat Aksaranan</div>
+        <div class="text-subtitle2">Full-Stack Developer</div>
+      </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          {{ lorem }}
-        </q-card-section>
-      </q-card>
-    </div>
+      <q-card-section class="q-pt-none">
+        {{ lorem }}
+      </q-card-section>
+    </q-card>
+
+    <q-card class="my-card">
+      <img src="../../assets/image/tam2.jpg" />
+      <q-card-section>
+        <div class="text-h6">Nared Fuengverojsakul</div>
+        <div class="text-subtitle2">Back-End Developer</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        {{ lorem }}
+      </q-card-section>
+    </q-card>
   </div>
 </template>
 
@@ -113,15 +110,25 @@ export default {
 </script>
 
 <style scoped>
-.col {
+.my-card {
+  width: 100%;
+  height: 100%;
+  max-width: 250px;
+
   margin: 1rem;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 .body {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-top: 10vh;
-  margin-bottom: 3vh;
+  margin-top: 3vh;
+  margin-bottom: 0vh;
 }
 .textHeader {
   color: black;
@@ -129,8 +136,8 @@ export default {
 }
 .textCenter {
   color: white;
-  font-size: 8vh;
-  margin-bottom: 35vh;
+  font-size: 5vh;
+  margin-bottom: 15vh;
 }
 
 .custom-caption {
