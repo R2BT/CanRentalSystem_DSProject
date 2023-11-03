@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: customfont">
     <q-toolbar class="bg-black text-white">
-      <q-btn flat round dense icon="menu" />
+   
       <q-toolbar-title> Car Rental System Management </q-toolbar-title>
       <router-link :to="{ name: 'login' }" class="custom-link">
         <q-btn
@@ -36,12 +36,12 @@
       >
       <q-carousel-slide :name="2" img-src="../../assets/image/guest/allCar.jpg">
         <div class="absolute-bottom custom-caption">
-          <div class="textCenter">ขับขี่ปลอดภัย</div>
+          <div class="textCenter">นึกถึงรถเช่านึกถึงเรา Car Rental</div>
         </div></q-carousel-slide
       >
       <q-carousel-slide :name="3" img-src="../../assets/image/guest/rent.jpg">
         <div class="absolute-bottom custom-caption">
-          <div class="textCenter">ส่งรถถึงมือ</div>
+          <div class="textCenter">โปรโมชั่น เช่าครั้งแรกลด 10%!</div>
         </div></q-carousel-slide
       >
       <q-carousel-slide :name="4" img-src="../../assets/image/guest/check.jpg">
@@ -50,9 +50,9 @@
         </div></q-carousel-slide
       >
     </q-carousel>
-
+    <div style="background-color: rgb(19, 19, 19);">
     <div class="body">
-      <div class="textHeader">ABOUT US</div>
+      <div class="textHeader">GROUP MEMBERS</div>
     </div>
 
     <div class="row">
@@ -93,6 +93,7 @@
       </q-card>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -102,7 +103,8 @@ import router from "../../router";
 
 export default {
   setup() {
-    localStorage.clear();
+    localStorage.removeItem('user-info'); 
+    localStorage.removeItem('user-changepassword');
     return {
       slide: ref(1),
       autoplay: ref(false),
@@ -137,11 +139,13 @@ export default {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-top: 3vh;
+  
   margin-bottom: 0vh;
 }
 .textHeader {
-  color: black;
+  margin-top: 10px;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
   font-size: 3vh;
 }
 .textCenter {

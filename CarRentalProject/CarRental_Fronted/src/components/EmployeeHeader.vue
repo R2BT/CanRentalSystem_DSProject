@@ -20,7 +20,7 @@
       style="height: calc(100% - 150px); margin-top: 150px"
       active-class="active-link"
     >
-      <q-list padding>
+      <q-list padding style="margin-top: 20px;">
         <router-link
           :to="{ name: 'rentcar' }"
           class="custom-link"
@@ -124,7 +124,7 @@
     <q-img
       class="absolute-top"
       style="
-        height: 150px;
+        height: 170px;
         background-image: linear-gradient(
           90deg,
           rgba(2, 0, 36, 1) 0%,
@@ -153,12 +153,22 @@
           <div v-else>{{ userInfo.user_type }}</div>
         </div>
         <div class="text-weight-bold" v-if="userInfo.user_type !== 'ADMIN'">
-          {{ userInfo.user_firstname }} {{ userInfo.user_surname }}
+          {{ userInfo.user_firstname }} {{ userInfo.user_surname }} <div
+            v-if="userInfo.count_rent === 0 && userInfo.user_type !== 'ADMIN'"
+          >
+            ระดับสมาชิก: ลูกค้าใหม่
+          </div>
+          <div
+            v-if="userInfo.count_rent > 0  &&  userInfo.user_type !== 'ADMIN'"
+          >
+            ระดับสมาชิก: ลูกค้าทั่วไป
+          </div>
         </div>
         <div>
           <div v-if="userInfo.user_type !== 'ADMIN'">
             Tel : {{ userInfo.user_phonenumber }}
           </div>
+
         </div>
       </div>
     </q-img>
@@ -222,5 +232,9 @@ export default {
 .custom-link {
   text-decoration: none;
   color: #ffffff;
+}
+.absolute-bottom bg-transparent{
+margin-top: 500vh;
+
 }
 </style>

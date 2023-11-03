@@ -42,11 +42,18 @@
                 color="purple"
                 bg-color="white"
                 filled
-                type="password"
+                :type="isPwd ? 'password' : 'text'"
                 label="Password"
                 :rules="[(value) => !!value || 'กรุณากรอก Password']"
-              />
+                ><template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  /> </template
+              ></q-input>
             </div>
+
             <router-link :to="{ name: 'changepassword' }" class="custom-link">
               <h6 class="forgetPass">ลืมรหัสผ่าน?</h6>
             </router-link>
@@ -75,6 +82,30 @@
               </router-link>
             </div>
           </q-form>
+          <q-dialog v-model="LockAlertDialog">
+            <q-card
+              style="
+                width: 400px;
+                padding: 10px;
+                background-color: red;
+                color: white;
+              "
+            >
+              <q-card-section>
+                <div class="text-h6" style="margin-bottom: 10px">
+                  ใส่รหัสผ่านผิดบ่อยเกินไป
+                </div>
+              </q-card-section>
+              <q-card-section class="q-pt-none">
+                ใส่รหัสผ่านผิดบ่อยเกินไปกรุณาลองอีกครั้งใน
+                {{ formattedBanDateTime }}
+              </q-card-section>
+              <q-card-actions align="right">
+                <q-btn flat label="OK" color="white" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+
           <q-dialog v-model="showAlertDialog">
             <q-card
               style="
@@ -106,9 +137,34 @@ import axios from "axios";
 import { ref, onBeforeMount } from "vue";
 import router from "../../router";
 
+const ACCOUNT_LOCKOUT_DURATION_MS = 300000; // 5 minutes in milliseconds
+
+let lockoutTimer;
+let timeShow;
+const MAX_FAILED_ATTEMPTS = 3;
+let failedLoginAttempts = 0;
+
 const Username = ref(null);
 const Password = ref(null);
 const showAlertDialog = ref(false);
+const LockAlertDialog = ref(false);
+const isPwd = ref(true);
+const currentDateTime = new Date();
+let banDateTime = null;
+
+const storedBanTime = localStorage.getItem("banTime");
+const storedDateTime = new Date(storedBanTime);
+const options = {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+};
+
+const formattedBanDateTime = ref(new Date(localStorage.getItem("banTime")).toLocaleString("en-US", options));
+
 async function encryptPassword(password) {
   const msgBuffer = new TextEncoder().encode(password);
   const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
@@ -120,46 +176,64 @@ async function encryptPassword(password) {
 }
 
 async function login() {
-  if (Username.value != null && Password.value != null) {
-    console.log(Username.value);
-    console.log(Password.value);
-    let sha256Password = await encryptPassword(Password.value);
-    try {
-      let result = await axios.get(
-        `http://localhost:8081/Car_rental_backend/users/login?username=${Username.value}&password=${sha256Password}`
-      );
+  const storedBanTime = localStorage.getItem("banTime");
+  const currentDateTime = new Date();
+  if (currentDateTime < new Date(storedBanTime)) {
+    LockAlertDialog.value = true;
+  } else {
+    if (Username.value != null && Password.value != null) {
+      try {
+        let sha256Password = await encryptPassword(Password.value);
+        let result = await axios.get(
+          `http://localhost:8081/Car_rental_backend/users/login?username=${Username.value}&password=${sha256Password}`
+        );
 
-      if (result.status === 200) {
-        // Handle success
-        localStorage.clear();
-        if (result.data.user_type == "ADMIN") {
+        if (result.status === 200) {
+          failedLoginAttempts = 0;
+          // Handle success
           localStorage.clear();
-          localStorage.setItem("user-info", JSON.stringify(result.data));
-          router.push("/adminpanel");
-        } else if (result.data.user_type == "USER") {
-          localStorage.clear();
-          localStorage.setItem("user-info", JSON.stringify(result.data));
-          router.push("/rentcar");
+          if (result.data.user_type == "ADMIN") {
+            localStorage.clear();
+            localStorage.setItem("user-info", JSON.stringify(result.data));
+            router.push("/adminpanel");
+          } else if (result.data.user_type == "USER") {
+            localStorage.clear();
+            localStorage.setItem("user-info", JSON.stringify(result.data));
+            router.push("/rentcar");
+          }
+        } else if (result.status == 404) {
+          // Handle 404 (Not Found)
+
+          showAlertDialog.value = true;
+          alert("User not found");
         }
-      } else if (result.status === 404) {
-        // Handle 404 (Not Found)
+      } catch (error) {
+        // Handle other errors
+        failedLoginAttempts++;
+        if (failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+          // Wait for the encryptPassword function to complete before setting banDateTime
+          banDateTime = new Date(currentDateTime.getTime() + 1 * 60000);
+          const storedDateTime = new Date(banDateTime);
+          localStorage.removeItem("banTime");
+          localStorage.setItem("banTime", banDateTime);
+          currentDateTime.value = new Date();
+          formattedBanDateTime.value = new Date(localStorage.getItem("banTime")).toLocaleString("en-US", options);
+        }
         showAlertDialog.value = true;
-        alert("User not found");
       }
-    } catch (error) {
-      // Handle other errors
-      console.error(error);
-      showAlertDialog.value = true;
     }
   }
 }
-
+function clearLockoutTimer() {
+  clearTimeout(lockoutTimer);
+}
 function onSubmit() {
   login();
 }
 
 onBeforeMount(() => {
-  localStorage.clear();
+  localStorage.removeItem("user-info"); // เลือกเคลียร์ข้อมูลที่มีชื่อ 'myData'
+  localStorage.removeItem("user-changepassword");
 });
 </script>
 
@@ -168,7 +242,6 @@ onBeforeMount(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "customfont";
 }
 body {
   background-image: url("../../assets/image/background.jpg");

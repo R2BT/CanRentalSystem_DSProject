@@ -36,14 +36,22 @@
                 color="purple"
                 bg-color="white"
                 filled
-                type="password"
+                :type="isPwd ? 'password' : 'text'"
                 label="Password"
                 :rules="[
                   (value) =>
                     validatePassword(value) ||
                     'กรุณากรอกรหัสผ่านที่ถูกต้อง 1 ตัวอักษรพิเศษ 1 ตัวพิมพ์เล็ก 1 ตัวพิมพ์ใหญ่ และมีความยาวมากกว่า8ตัวอักษร',
                 ]"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
+              </q-input>
             </div>
             <div class="col-margin">
               <q-input
@@ -136,7 +144,8 @@ import router from "../../router";
 const showAlertDialog = ref(false);
 export default {
   setup() {
-    localStorage.clear();
+    localStorage.removeItem('user-info'); 
+    localStorage.removeItem('user-changepassword');
     return {
       username: ref(null),
       password: ref(null),
@@ -185,6 +194,7 @@ export default {
           user_surname: this.surname,
           user_phonenumber: this.phonenumber,
           user_type: "USER",
+          count_rent: 0
         };
 
         var requestOptions = {
@@ -224,7 +234,6 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "customfont";
 }
 body {
   background-image: url("../../assets/image/background.jpg");

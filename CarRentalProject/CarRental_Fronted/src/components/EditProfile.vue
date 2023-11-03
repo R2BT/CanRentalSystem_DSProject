@@ -71,8 +71,10 @@ export default {
     const userInfo = JSON.parse(myItem);
     userInfoGlo.value = JSON.parse(myItem);
     const idUser = userInfo.user_id;
+    const count = userInfo.count_rent;
     return {
       idUser,
+      count,
       username: ref(userInfo.user_username),
       password: ref(userInfo.user_password),
       firstname: ref(userInfo.user_firstname),
@@ -113,6 +115,7 @@ export default {
           user_firstname: this.firstname,
           user_surname: this.surname,
           user_phonenumber: this.phonenumber,
+          count_rent: this.count,
           user_type: "USER",
         };
         var requestOptions = {

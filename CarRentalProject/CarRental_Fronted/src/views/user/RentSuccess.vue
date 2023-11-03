@@ -14,15 +14,14 @@
             <h4 class="textDone">ยืนยันรายการเช่ารถสำเร็จ</h4>
             <h4 class="textDone2">ตรวจสอบได้ที่รายการเช่ารถของฉัน</h4>
             <span style="margin-top: 15px"></span>
-            <router-link :to="{ name: 'rentcar' }">
               <q-btn
                 unelevated
                 rounded
                 color="grey"
                 label="ย้อนกลับ"
+                @click="reLoadUser"
                 style="padding-left: 200px; padding-right: 200px"
               />
-            </router-link>
           </div>
         </div>
       </q-page-container>
@@ -34,6 +33,8 @@
 </template>
 <script>
 import Navbar from "../../components/EmployeeHeader.vue";
+import axios from "axios";
+import router from "../../router";
 export default {
   setup() {
     const myItem = localStorage.getItem("user-info");
@@ -45,6 +46,27 @@ export default {
   components: {
     Navbar,
   },
+  methods: {
+    async reLoadUser() {
+  try {
+    const myItem = localStorage.getItem("user-info");
+    const userInfo = JSON.parse(myItem);
+    const username = userInfo.user_username;
+    const password = userInfo.user_password;
+
+    const response = await axios.get(
+      `http://localhost:8081/Car_rental_backend/users/login?username=${username}&password=${password}`
+    );
+
+    localStorage.clear();
+    localStorage.setItem("user-info", JSON.stringify(response.data));
+    router.push("/rentcar");
+  } catch (error) {
+    console.error("Error loading user data:", error);
+  }
+}
+
+  }
 };
 </script>
 

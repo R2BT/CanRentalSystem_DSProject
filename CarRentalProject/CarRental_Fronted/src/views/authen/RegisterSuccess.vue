@@ -32,7 +32,8 @@
 import Navbar from "../../components/EmployeeHeader.vue";
 export default {
   setup() {
-    localStorage.clear();
+    localStorage.removeItem('user-info'); 
+    localStorage.removeItem('user-changepassword');
   },
   components: {
     Navbar,

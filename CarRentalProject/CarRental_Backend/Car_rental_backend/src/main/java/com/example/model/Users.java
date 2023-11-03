@@ -21,12 +21,14 @@ public class Users {
 	private String user_phonenumber;
 	@Column(name = "user_type")
 	private String user_type;
+	@Column(name = "count_rent")
+	private int count_rent;
 	public Users() {
 		
 	}
 	
 	public Users(int user_id, String user_username, String user_password, String user_firstname, String user_surname,
-			String user_phonenumber, String user_type) {
+			String user_phonenumber, String user_type,int count_rent) {
 		super();
 		this.user_id = user_id;
 		this.user_username = user_username;
@@ -35,6 +37,7 @@ public class Users {
 		this.user_surname = user_surname;
 		this.user_phonenumber = user_phonenumber;
 		this.user_type = user_type;
+		this.count_rent = count_rent;
 	}
 
 
@@ -79,6 +82,14 @@ public class Users {
 	}
 	public void setUser_type(String user_type) {
 		this.user_type = user_type;
+	}
+
+	public int getCount_rent() {
+		return count_rent;
+	}
+
+	public void setCount_rent(int count_rent) {
+		this.count_rent = count_rent;
 	}
 	
 }

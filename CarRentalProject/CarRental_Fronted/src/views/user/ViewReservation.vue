@@ -164,6 +164,13 @@ const columns = ref([
     field: (row) => row.cost_per_day,
     sortable: true,
   },
+    {
+    name: "Discount",
+    align: "left",
+    label: "ส่วนลด",
+    field: (row) => row.discount,
+    sortable: true,
+  },
   {
     name: "TotalCost",
     align: "left",
