@@ -133,12 +133,14 @@ export default {
     const userInfo = JSON.parse(myItem);
     userInfoGlo.value = JSON.parse(myItem);
     const idUser = userInfo.user_id;
+    const count = userInfo.count_rent;
     var AlertHeader = "";
     var AlertText = "";
     return {
       showAlertDialog,
       showAlertDialog2,
       idUser,
+      count,
       username: ref(userInfo.user_username),
       oldPassword: ref(userInfo.user_password),
       oldPasswordInput: ref(null),
@@ -199,6 +201,7 @@ export default {
               user_firstname: this.firstname,
               user_surname: this.surname,
               user_phonenumber: this.phonenumber,
+              count_rent: this.count,
               user_type: "USER",
             };
             var requestOptions = {

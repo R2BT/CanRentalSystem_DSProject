@@ -150,6 +150,13 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "Discount",
+    align: "left",
+    label: "ส่วนลด",
+    field: (row) => row.discount,
+    sortable: true,
+  },
+  {
     name: "TotalCost",
     align: "left",
     label: "ราคาเช่ารวมทั้งหมด(บาท)",
@@ -323,10 +330,5 @@ h6 {
   height: 470px;
   width: 100%;
 }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "customfont";
-}
+
 </style>

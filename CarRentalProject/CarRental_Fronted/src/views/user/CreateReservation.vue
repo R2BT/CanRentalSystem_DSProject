@@ -70,7 +70,6 @@
                 title="รถที่สามารถเช่าได้"
                 :rows="rows"
                 :columns="columns"
-                :filter="filter"
                 row-key="car_id"
                 no-data-label="กรุณาเลือกวันที่เริ่มเช่าและวันที่สิ้นสุดการเช่า"
               >
@@ -154,9 +153,13 @@
                             {{ platNumberInfo }}<br />
                             วันที่เริ่มเช่า-วันที่สิ้นสุดการเช่า:
                             {{ rentStartdate }} - {{ rentEnddate }}<br />
-                            ราคาเช่า/วัน: {{ priceRentperday }} บาท<br />
                             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
-                            ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
+                            ราคาเช่า/วัน: {{ priceRentperday }} บาท<br />
+                            ส่วนลด: {{ saleprice }} <br />
+                            <div style="font-weight: bold">
+                              ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท
+                            </div>
+                            <br />
                           </div>
                         </q-card-title>
                         <q-card-title
@@ -201,18 +204,6 @@
                     </q-card>
                   </q-dialog>
                 </template>
-                <template v-slot:top-right>
-                  <q-input
-                    bg-color="white"
-                    borderless
-                    dense
-                    debounce="300"
-                    v-model="filter"
-                    placeholder="  Search..."
-                  >
-                    <template v-slot:append> </template>
-                  </q-input>
-                </template>
               </q-table>
             </div>
           </div>
@@ -255,12 +246,25 @@ export default {
       return true;
     },
     rentCarAlert(id, name, platNumber, type, price, img) {
+      const myItem = localStorage.getItem("user-info");
+      const userInfo = JSON.parse(myItem);
+      let saleCal ;
+      const count = userInfo.count_rent;
+      if (count === 0) {
+        this.saleprice = "10% (โปรโมชั่นเช่ารถครั้งแรก)";
+        this.salePriceSend = this.saleprice;
+        saleCal = 0.1;
+      } else {
+        this.saleprice = "ไม่มีส่วนลด";
+        this.salePriceSend = this.saleprice;
+        saleCal = 0;
+      }
       const pricePerDay = parseFloat(price);
       const startDate = new Date(this.rentStartdate);
       const endDate = new Date(this.rentEnddate);
-
       const dayDifference = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
-      this.rentPriceInfo = pricePerDay * dayDifference;
+      this.rentPriceInfo = (pricePerDay * dayDifference) - ((pricePerDay * dayDifference) *  saleCal)  ;
+      this.totalCostSend  =    this.rentPriceInfo ;
       this.priceRentperday = pricePerDay;
       this.countDay = dayDifference;
       this.dialogMessage = "ยืนยันรายการเช่ารถ ";
@@ -268,6 +272,7 @@ export default {
       this.typeCarInfo = `ประเภท: ${type}`;
       this.platNumberInfo = `หมายเลขทะเบียน: ${platNumber}`;
       this.pricePerdaysend = pricePerDay;
+      
       this.dialog = true;
       this.actionColor = "negative";
       this.carShowimg = img;
@@ -283,9 +288,11 @@ export default {
     const userInfo = JSON.parse(myItem);
     const currentTime = ref("");
     const currentDate = ref("");
+    const totalCostSend = ref(null);
     const rentStartdate = ref(null);
     const rentEnddate = ref(null);
     const pricePerdaysend = ref(null);
+    const salePriceSend = ref(null);
     const updateClock = () => {
       const now = new Date();
       const hours = now.getHours();
@@ -419,6 +426,45 @@ export default {
     const rows = ref([]);
 
     const rentCar = (id) => {
+      const myItem = localStorage.getItem("user-info");
+      const userInfo = JSON.parse(myItem);
+      var myHeaders = new Headers();
+      const count = 1 + userInfo.count_rent ;
+      const uid = userInfo.user_id;
+      const ufistname = userInfo.user_firstname;
+      const usurname = userInfo.user_surname;
+      const uphone = userInfo.user_phonenumber;
+
+      myHeaders.append("Content-Type", "application/json; charset=UTF-8");
+      const raw = {
+        user_id: userInfo.user_id,
+        user_username: userInfo.user_username,
+        user_password: userInfo.user_password,
+        user_firstname: ufistname,
+        user_surname: usurname,
+        user_phonenumber: uphone,
+        user_type: "USER",
+        count_rent: count,
+      };
+      var requestOptions = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(raw),
+        redirect: "follow",
+      };
+
+      fetch(
+        `http://localhost:8081/Car_rental_backend/users/ ` + uid,
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          rentCarsure(id);
+        });
+    };
+    const rentCarsure = (id) => {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -427,12 +473,13 @@ export default {
 
       const formattedStartDate = startDate.toISOString();
       const formattedEndDate = endDate.toISOString();
-
       var raw = JSON.stringify({
         start_date: formattedStartDate,
         end_date: formattedEndDate,
         cost_per_day: pricePerdaysend.value,
         status: "จองเช่ารถล่วงหน้า",
+        total_cost : totalCostSend.value ,
+        discount: salePriceSend.value
       });
 
       var requestOptions = {
@@ -466,7 +513,6 @@ export default {
         })
         .catch((error) => console.log("error", error));
     };
-
     return {
       currentTime,
       currentDate,
@@ -478,6 +524,8 @@ export default {
       rentCar,
       pricePerdaysend,
       userInfo,
+      salePriceSend,
+      totalCostSend 
     };
   },
 };

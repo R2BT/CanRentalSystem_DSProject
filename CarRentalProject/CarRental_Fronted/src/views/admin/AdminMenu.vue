@@ -37,7 +37,7 @@
                   <div class="col">
                     <p class="text2">ข้อมูลรถเช่าทั้งหมด</p>
                     <p class="text3">จัดการข้อมูลรถเช่าทั้งหมด</p>
-                    <div class="btn-next">
+                    <div class="btn-next" >
                       <router-link :to="{ name: 'admincar' }">
                         <q-btn label="ถัดไป" class="custom-btn" />
                       </router-link>
@@ -89,12 +89,7 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "customfont";
-}
+
 .background {
   background-image: url("../../assets/image/background4.svg");
   background-size: cover;

@@ -772,12 +772,6 @@ body {
   margin: 0;
   height: 100vh;
 }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "customfont";
-}
 .background {
   background-image: url("../../assets/image/background.jpg");
   background-size: cover;

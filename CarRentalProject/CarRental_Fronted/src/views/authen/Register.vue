@@ -185,6 +185,7 @@ export default {
           user_surname: this.surname,
           user_phonenumber: this.phonenumber,
           user_type: "USER",
+          count_rent: 0
         };
 
         var requestOptions = {

@@ -37,6 +37,8 @@ public class HistoryReservation {
     private double cost_per_day;
     @Column(name = "total_cost")
     private double total_cost;
+	@Column(name = "discount")
+	private String discount;
 
     public HistoryReservation() {
 
@@ -44,7 +46,7 @@ public class HistoryReservation {
 
     public HistoryReservation(int history_reservation_id, String user_firstname, String user_lastname, String user_phone,
             String car_name, String car_platenumber, String car_typemodel, String image_path, Date start_date, Date end_date,
-            double total_cost, double cost_per_day) {
+            double total_cost, double cost_per_day ,String discount) {
         super();
         this.history_reservation_id = history_reservation_id;
         this.user_firstname = user_firstname;
@@ -155,4 +157,12 @@ public class HistoryReservation {
     public void setTotal_cost(double total_cost) {
         this.total_cost = total_cost;
     }
+
+	public String getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(String discount) {
+		this.discount = discount;
+	}
 }

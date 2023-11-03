@@ -60,7 +60,7 @@ public class ReservationController {
 		long diffInMillies = reserve.getEnd_date().getTime() - reserve.getStart_date().getTime();
 		long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 		System.out.println(diffInDays);
-		reserve.setTotal_cost((car.getPrice_per_day() * (diffInDays+1)));
+//		reserve.setTotal_cost((car.getPrice_per_day() * (diffInDays+1)));
 		reservationService.updateReservation(reserve);
 		return new ResponseEntity<Reservation>(reserve, HttpStatus.CREATED);
 	}

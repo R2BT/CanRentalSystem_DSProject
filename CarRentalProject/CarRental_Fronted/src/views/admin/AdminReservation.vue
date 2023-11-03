@@ -91,7 +91,8 @@
                       props.row.total_cost,
                       props.row.image_path,
                       props.row.cost_per_day,
-                      props.row.status
+                      props.row.status,
+                      props.row.discount
                     )
                   "
                 ></q-btn>
@@ -114,7 +115,8 @@
                       props.row.total_cost,
                       props.row.image_path,
                       props.row.cost_per_day,
-                      props.row.status
+                      props.row.status,
+                      props.row.discount
                     )
                   "
                 ></q-btn>
@@ -135,7 +137,8 @@
                       props.row.total_cost,
                       props.row.image_path,
                       props.row.cost_per_day,
-                      props.row.status
+                      props.row.status,
+                      props.row.discount
                     )
                   "
                 ></q-btn>
@@ -183,7 +186,8 @@
             {{ rentEnddate }}<br />
             ราคาเช่าต่อวัน: {{ pricePerday }} บาท<br />
             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
-            ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
+            ส่วนลด: {{ saleprice }} <br />
+            <div style="font-weight: bold">    ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท </div> <br />
           </div>
         </q-card-title>
         <q-card-title class="text-h6 close-container" style="margin-bottom: 0">
@@ -236,7 +240,8 @@
             {{ rentEnddate }}<br />
             ราคาเช่าต่อวัน: {{ pricePerday }} บาท<br />
             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
-            ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
+            ส่วนลด: {{ saleprice }} <br />
+            <div style="font-weight: bold">  ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท </div> <br /> 
           </div>
         </q-card-title>
         <q-card-title class="text-h6 close-container" style="margin-bottom: 0">
@@ -290,7 +295,8 @@
             {{ rentEnddate }}<br />
             ราคาเช่าต่อวัน: {{ pricePerday }} บาท<br />
             จำนวนวันที่เช่า: {{ countDay }} วัน <br />
-            ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท<br />
+            ส่วนลด: {{ saleprice }} <br />
+            <div style="font-weight: bold">ราคาเช่าทั้งหมด: {{ rentPriceInfo }} บาท </div> <br />
           </div>
         </q-card-title>
         <q-card-title class="text-h6 close-container" style="margin-bottom: 0">
@@ -407,6 +413,13 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "Discount",
+    align: "left",
+    label: "ส่วนลด",
+    field: (row) => row.discount,
+    sortable: true,
+  },
+  {
     name: "TotalCost",
     align: "left",
     label: "ราคาเช่ารวมทั้งหมด(บาท)",
@@ -504,7 +517,7 @@ export default {
       price,
       img,
       priceperday,
-      status
+      status,discount
     ) {
       this.dialogMessage = "สิ้นสุดการเช่ารถ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
@@ -537,6 +550,7 @@ export default {
       this.imgpath = this.encrypt(img);
       this.pricePerday = priceperday;
       this.statusCheck = status;
+      this.saleprice = discount;
     },
     changeStatusAlert(
       id,
@@ -553,7 +567,7 @@ export default {
       price,
       img,
       priceperday,
-      status
+      status,discount
     ) {
       this.dialogMessage = "เปลี่ยนสถานะเป็นอยู่ในระหว่างดำเนินการเช่ารถ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
@@ -585,6 +599,7 @@ export default {
       this.pricePerday = priceperday;
       this.priceperday = priceperday;
       this.imgpath = this.encrypt(img);
+      this.saleprice = discount;
       this.statusCheck = status;
       this.uid = uid;
       this.cid = cid;
@@ -602,7 +617,7 @@ export default {
       price,
       img,
       priceperday,
-      status
+      status,discount
     ) {
       this.dialogMessage = "ยกเลิกรายการเช่ารถ ";
       this.name = `ชื่อผู้เช่า : ${firstname} ${lastname}`;
@@ -623,6 +638,7 @@ export default {
       this.ridToDelete = id;
       this.pricePerday = priceperday;
       this.statusCheck = status;
+      this.saleprice = discount;
     },
     deleteReservation(id) {
       var myHeaders = new Headers();
@@ -691,6 +707,7 @@ export default {
         total_cost: this.totalcost,
         cost_per_day: this.priceperday,
         image_path: this.imgpath,
+        discount: this.saleprice
       };
 
       var requestOptions = {
@@ -718,6 +735,7 @@ export default {
         end_date: this.endDate,
         total_cost: this.totalcost,
         cost_per_day: this.priceperday,
+        discount: this.saleprice,
         status: "อยู่ในระหว่างดำเนินการเช่ารถ",
       };
 
@@ -772,12 +790,7 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "customfont";
-}
+
 body {
   background-color: rgb(234, 234, 234);
   margin: 0;

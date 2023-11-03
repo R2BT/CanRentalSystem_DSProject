@@ -123,6 +123,20 @@ const columns = ref([
     field: "user_phonenumber",
     sortable: true,
   },
+  {
+    name: "Count",
+    align: "left",
+    label: "จำนวนครั้งที่เช่า",
+    field: "count_rent",
+    sortable: true,
+  },
+  {
+    name: "LevelCustomer",
+    align: "left",
+    label: "ระดับลูกค้า",
+    field: (row) => getLevelCustomerLabel(row.count_rent),
+    sortable: true,
+  },
   { name: "action", align: "center", field: "user_id" },
 ]);
 const fetchData = () => {
@@ -134,7 +148,13 @@ const fetchData = () => {
     rows.value = filteredRows;
   });
 };
-
+const getLevelCustomerLabel = (countRent) => {
+  if (countRent === 0) {
+    return "ลูกค้าใหม่";
+  } else if (countRent > 0 ) {
+    return "ลูกค้าทั่วไป";
+  } 
+};
 export default {
   setup() {
     fetchData();
@@ -207,12 +227,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "customfont";
-}
 body {
   background-color: rgb(234, 234, 234);
   margin: 0;

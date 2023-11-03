@@ -136,10 +136,12 @@ export default {
     const myItem = localStorage.getItem("user-info");
     const userInfo = JSON.parse(myItem);
     const idUser = userInfo.user_id;
+    const count = userInfo.count_rent;
     console.log(userInfo);
     return {
       userInfo,
       idUser,
+      count,
       username: userInfo.user_username,
       firstname: userInfo.user_firstname,
       surname: userInfo.user_surname,
@@ -189,6 +191,7 @@ export default {
             user_firstname: this.firstname,
             user_surname: this.surname,
             user_phonenumber: this.phonenumber,
+            count_rent: this.count,
             user_type: "USER",
           };
           var requestOptions = {
