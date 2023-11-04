@@ -33,7 +33,7 @@
             <q-input
               v-model="newPassword"
               label="รหัสผ่านใหม่"
-              :type="isPwd ? 'password' : 'text'"
+              :type="isPwd2 ? 'password' : 'text'"
               ref="passwordField"
               :rules="[
                 (value) =>
@@ -43,9 +43,9 @@
             >
               <template v-slot:append>
                 <q-icon
-                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  :name="isPwd2 ? 'visibility_off' : 'visibility'"
                   class="cursor-pointer"
-                  @click="isPwd = !isPwd"
+                  @click="isPwd2 = !isPwd2"
                 />
               </template>
             </q-input>
@@ -53,15 +53,15 @@
             <q-input
               v-model="confirmNewPassword"
               label="ยืนยันรหัสผ่านใหม่"
-              :type="isPwd ? 'password' : 'text'"
+              :type="isPwd3 ? 'password' : 'text'"
               ref="passwordField"
               :rules="[(value) => !!value || 'กรุณากรอก Password']"
             >
               <template v-slot:append>
                 <q-icon
-                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  :name="isPwd3 ? 'visibility_off' : 'visibility'"
                   class="cursor-pointer"
-                  @click="isPwd = !isPwd"
+                  @click="isPwd3 = !isPwd3"
                 />
               </template>
             </q-input>
@@ -151,6 +151,8 @@ export default {
       phonenumber: ref(userInfo.user_phonenumber),
       showChangePassword: ref(false),
       isPwd: ref(true),
+      isPwd2: ref(true),
+      isPwd3: ref(true),
     };
   },
   methods: {

@@ -103,7 +103,8 @@ import router from "../../router";
 
 export default {
   setup() {
-    localStorage.clear();
+    localStorage.removeItem('user-info'); 
+    localStorage.removeItem('user-changepassword');
     return {
       slide: ref(1),
       autoplay: ref(false),

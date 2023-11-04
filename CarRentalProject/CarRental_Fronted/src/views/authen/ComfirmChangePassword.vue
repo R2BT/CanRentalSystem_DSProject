@@ -24,6 +24,8 @@
           <q-form @submit="onSubmit" ref="form">
             <div class="col-margin">
               <q-input
+                filled
+                bg-color="white"
                 v-model="newPassword"
                 label="รหัสผ่านใหม่"
                 :type="isPwd ? 'password' : 'text'"
@@ -45,17 +47,19 @@
             </div>
             <div class="col-margin">
               <q-input
+                filled
+                bg-color="white"
                 v-model="confirmNewPassword"
                 label="ยืนยันรหัสผ่านใหม่"
-                :type="isPwd ? 'password' : 'text'"
+                :type="isPwd2 ? 'password' : 'text'"
                 ref="passwordField"
                 :rules="[(value) => !!value || 'กรุณากรอก Password']"
               >
                 <template v-slot:append>
                   <q-icon
-                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    :name="isPwd2 ? 'visibility_off' : 'visibility'"
                     class="cursor-pointer"
-                    @click="isPwd = !isPwd"
+                    @click="isPwd2 = !isPwd2"
                   />
                 </template>
               </q-input>
@@ -133,13 +137,15 @@ const showAlertDialog = ref(false);
 const showAlertDialog2 = ref(false);
 export default {
   setup() {
-    const myItem = localStorage.getItem("user-info");
+    const myItem = localStorage.getItem("user-changepassword");
     const userInfo = JSON.parse(myItem);
     const idUser = userInfo.user_id;
     const count = userInfo.count_rent;
     console.log(userInfo);
     return {
       userInfo,
+      isPwd: ref(true),
+      isPwd2: ref(true),
       idUser,
       count,
       username: userInfo.user_username,
@@ -208,9 +214,9 @@ export default {
           )
             .then((response) => response.text())
             .then((result) => {
-              this.comfirmreSaveUser();
+              showAlertDialog2.value = true;  // this.comfirmreSaveUser();
             });
-          showAlertDialog2.value = true;
+          // showAlertDialog2.value = true;
         } else {
           showAlertDialog.value = true;
           this.AlertHeader = "รหัสผ่านใหม่กับยืนยันรหัสผ่านไม่ตรงกัน";
@@ -231,18 +237,18 @@ export default {
         .join("");
       return hashHex;
     },
-    comfirmreSaveUser() {
-      this.reSaveUser();
-    },
+    // comfirmreSaveUser() {
+    //   this.reSaveUser();
+    // },
 
-    async reSaveUser() {
-      let result = await axios.get(
-        `http://localhost:8081/Car_rental_backend/users/login?username=${this.username}&password=${this.newpass}`
-      );
-      localStorage.clear();
-      localStorage.setItem("user-info", JSON.stringify(result.data));
-      window.location.reload();
-    },
+    // async reSaveUser() {
+    //   let result = await axios.get(
+    //     `http://localhost:8081/Car_rental_backend/users/login?username=${this.username}&password=${this.newpass}`
+    //   );
+    //   localStorage.clear();
+    //   localStorage.setItem("user-info", JSON.stringify(result.data));
+    //   window.location.reload();
+    // },
   },
 };
 </script>

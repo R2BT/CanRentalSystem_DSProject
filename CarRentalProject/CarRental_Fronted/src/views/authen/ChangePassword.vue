@@ -124,7 +124,8 @@ import router from "../../router";
 const showAlertDialog = ref(false);
 export default {
   setup() {
-    localStorage.clear();
+    localStorage.removeItem('user-info'); 
+    localStorage.removeItem('user-changepassword');
     return {
       username: ref(null),
       firstname: ref(null),
@@ -159,7 +160,7 @@ export default {
           );
           if (result.status === 200) {
             localStorage.clear();
-            localStorage.setItem("user-info", JSON.stringify(result.data));
+            localStorage.setItem("user-changepassword", JSON.stringify(result.data));
             router.push("/register/changepassword/comfirm");
           } else if (result.status === 404) {
             // console.log("False");
