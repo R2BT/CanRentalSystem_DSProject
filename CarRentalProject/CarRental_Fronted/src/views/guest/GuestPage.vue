@@ -50,7 +50,7 @@
         </div></q-carousel-slide
       >
     </q-carousel>
-    <div style="background-color: rgb(19, 19, 19);">
+    <div style="background-color: rgb(255, 255, 255);">
     <div class="body">
       <div class="textHeader">GROUP MEMBERS</div>
     </div>
