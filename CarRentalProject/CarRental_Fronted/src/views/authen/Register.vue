@@ -27,7 +27,10 @@
                 filled
                 v-model="username"
                 label="Username"
-                :rules="[(value) => !!value || 'กรุณากรอก Username']"
+                :rules="[
+  (value) => !!value || 'กรุณากรอก Username',
+  isThaiLanguageAllowed
+]"
               ></q-input>
             </div>
             <div class="col-margin">
@@ -41,7 +44,7 @@
                 :rules="[
                   (value) =>
                     validatePassword(value) ||
-                    'กรุณากรอกรหัสผ่านที่ถูกต้อง 1 ตัวอักษรพิเศษ 1 ตัวพิมพ์เล็ก 1 ตัวพิมพ์ใหญ่ และมีความยาวมากกว่า8ตัวอักษร',
+                    'กรุณากรอกรหัสผ่านที่ถูกต้อง 1 ตัวอักษรพิเศษ 1 ตัวพิมพ์เล็ก 1 ตัวพิมพ์ใหญ่ มีความยาวมากกว่า8ตัวอักษรและห้ามเป็นภาษาไทย',
                 ]"
               >
                 <template v-slot:append>
@@ -144,8 +147,8 @@ import router from "../../router";
 const showAlertDialog = ref(false);
 export default {
   setup() {
-    localStorage.removeItem('user-info'); 
-    localStorage.removeItem('user-changepassword');
+    localStorage.removeItem("user-info");
+    localStorage.removeItem("user-changepassword");
     return {
       username: ref(null),
       password: ref(null),
@@ -153,10 +156,21 @@ export default {
       surname: ref(null),
       phonenumber: ref(null),
       isPwd: ref(true),
-      showAlertDialog
+      showAlertDialog,
     };
   },
   methods: {
+    isThaiLanguageAllowed(value) {
+      if (value === null) {
+    return "กรุณากรอก Username";
+  }
+      // ใช้ Regex เพื่อตรวจสอบว่ามีอักขระไทยหรือไม่
+      const thaiRegex = /[\u0E00-\u0E7F]/;
+      if (thaiRegex.test(value)) {
+        return "ห้ามพิมพ์ภาษาไทย";
+      }
+      return true;
+    },
     validatePhoneNumber(number) {
       const regex = /^[0-9]{10}$/;
       return regex.test(number);
@@ -168,7 +182,16 @@ export default {
     validatePassword(password) {
       const regex =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      return regex.test(password);
+      const thaiRegex = /[\u0E00-\u0E7F]/;
+
+      // ตรวจสอบรหัสผ่านควรประกอบด้วยอักขระที่ระบุ
+      if (!regex.test(password)) {
+        return false;
+      }
+      if (thaiRegex.test(password)) {
+        return false;
+      }
+      return true;
     },
     cancel() {
       this.show = false;
@@ -194,7 +217,7 @@ export default {
           user_surname: this.surname,
           user_phonenumber: this.phonenumber,
           user_type: "USER",
-          count_rent: 0
+          count_rent: 0,
         };
 
         var requestOptions = {
@@ -205,15 +228,13 @@ export default {
         };
 
         fetch("http://localhost:8081/Car_rental_backend/users", requestOptions)
-  .then((response) => response.json())
-  .then((result) => {
-    router.push("/register/success");
-  })
-  .catch((error) => {
-    showAlertDialog.value = true;
-  });
-
-       
+          .then((response) => response.json())
+          .then((result) => {
+            router.push("/register/success");
+          })
+          .catch((error) => {
+            showAlertDialog.value = true;
+          });
       }
     },
     async encryptPassword(password) {

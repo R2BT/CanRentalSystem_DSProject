@@ -181,7 +181,15 @@ export default {
       showAlertDialog2.value = false;
     },
     async onSubmit() {
-      if (this.newPassword != null && this.confirmNewPassword != null) {
+      if (
+        this.newPassword != null &&
+        this.confirmNewPassword != null &&
+        this.newPassword.length > 8 &&
+        /[a-z]/.test(this.newPassword) &&
+        /[A-Z]/.test(this.newPassword) &&
+        /[!@#$%^&*]/.test(this.newPassword)&&
+        !/[\u0E00-\u0E7F]/.test(this.newPassword)
+      ) {
         console.log("notnull");
         if (this.newPassword == this.confirmNewPassword) {
           console.log("equal");
@@ -214,7 +222,7 @@ export default {
           )
             .then((response) => response.text())
             .then((result) => {
-              showAlertDialog2.value = true;  // this.comfirmreSaveUser();
+              showAlertDialog2.value = true; // this.comfirmreSaveUser();
             });
           // showAlertDialog2.value = true;
         } else {
