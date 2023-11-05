@@ -142,7 +142,6 @@ const ACCOUNT_LOCKOUT_DURATION_MS = 300000; // 5 minutes in milliseconds
 let lockoutTimer;
 let timeShow;
 let failedLoginAttempts = localStorage.getItem("count");
-console.log(failedLoginAttempts)
 let MAX_FAILED_ATTEMPTS = 3;
 
 
@@ -217,7 +216,7 @@ async function login() {
         localStorage.setItem("count", failedLoginAttempts);
         if (failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
           // Wait for the encryptPassword function to complete before setting banDateTime
-          banDateTime = new Date(currentDateTime.getTime() + 1 * 60000);
+          banDateTime = new Date(currentDateTime.getTime() + 10 * 60000);
           const storedDateTime = new Date(banDateTime);
           localStorage.removeItem("banTime");
           localStorage.setItem("banTime", banDateTime);
