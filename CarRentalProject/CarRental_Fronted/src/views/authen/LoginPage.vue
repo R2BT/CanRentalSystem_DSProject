@@ -141,8 +141,10 @@ const ACCOUNT_LOCKOUT_DURATION_MS = 300000; // 5 minutes in milliseconds
 
 let lockoutTimer;
 let timeShow;
-const MAX_FAILED_ATTEMPTS = 3;
-let failedLoginAttempts = 0;
+let failedLoginAttempts = localStorage.getItem("count");
+console.log(failedLoginAttempts)
+let MAX_FAILED_ATTEMPTS = 3;
+
 
 const Username = ref(null);
 const Password = ref(null);
@@ -182,6 +184,7 @@ async function login() {
     LockAlertDialog.value = true;
   } else {
     if (Username.value != null && Password.value != null) {
+      
       try {
         let sha256Password = await encryptPassword(Password.value);
         let result = await axios.get(
@@ -190,6 +193,7 @@ async function login() {
 
         if (result.status === 200) {
           failedLoginAttempts = 0;
+          localStorage.setItem("count",  failedLoginAttempts);
           // Handle success
           localStorage.clear();
           if (result.data.user_type == "ADMIN") {
@@ -208,14 +212,17 @@ async function login() {
           alert("User not found");
         }
       } catch (error) {
-        // Handle other errors
-        failedLoginAttempts++;
+        console.log(MAX_FAILED_ATTEMPTS);
+        failedLoginAttempts++; 
+        localStorage.setItem("count", failedLoginAttempts);
         if (failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
           // Wait for the encryptPassword function to complete before setting banDateTime
           banDateTime = new Date(currentDateTime.getTime() + 1 * 60000);
           const storedDateTime = new Date(banDateTime);
           localStorage.removeItem("banTime");
           localStorage.setItem("banTime", banDateTime);
+          failedLoginAttempts=0;
+          localStorage.setItem("count", 0);
           currentDateTime.value = new Date();
           formattedBanDateTime.value = new Date(localStorage.getItem("banTime")).toLocaleString("en-US", options);
         }
